@@ -27,11 +27,13 @@ struct angle_
   angle_()
     : header()
     , angle(0.0)
+    , state(0)
     , forward(false)  {
     }
   angle_(const ContainerAllocator& _alloc)
     : header(_alloc)
     , angle(0.0)
+    , state(0)
     , forward(false)  {
     }
 
@@ -42,6 +44,9 @@ struct angle_
 
    typedef double _angle_type;
   _angle_type angle;
+
+   typedef uint32_t _state_type;
+  _state_type state;
 
    typedef uint8_t _forward_type;
   _forward_type forward;
@@ -123,12 +128,12 @@ struct MD5Sum< ::project::angle_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "61e9cda6f2c74ef70eaa25181cf11ba2";
+    return "885f619283918674d5c6ac31b80b0c28";
   }
 
   static const char* value(const ::project::angle_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x61e9cda6f2c74ef7ULL;
-  static const uint64_t static_value2 = 0x0eaa25181cf11ba2ULL;
+  static const uint64_t static_value1 = 0x885f619283918674ULL;
+  static const uint64_t static_value2 = 0xd5c6ac31b80b0c28ULL;
 };
 
 template<class ContainerAllocator>
@@ -152,10 +157,11 @@ struct Definition< ::project::angle_<ContainerAllocator> >
 #Angle (-180.0, 180, 0 is forward)\n\
 float64 angle\n\
 \n\
+#State is the current defensive state\n\
+uint32 state\n\
+\n\
 #Forward\n\
 bool forward\n\
-\n\
-\n\
 \n\
 ================================================================================\n\
 MSG: std_msgs/Header\n\
@@ -194,6 +200,7 @@ namespace serialization
     {
       stream.next(m.header);
       stream.next(m.angle);
+      stream.next(m.state);
       stream.next(m.forward);
     }
 
@@ -218,6 +225,8 @@ struct Printer< ::project::angle_<ContainerAllocator> >
     Printer< ::std_msgs::Header_<ContainerAllocator> >::stream(s, indent + "  ", v.header);
     s << indent << "angle: ";
     Printer<double>::stream(s, indent + "  ", v.angle);
+    s << indent << "state: ";
+    Printer<uint32_t>::stream(s, indent + "  ", v.state);
     s << indent << "forward: ";
     Printer<uint8_t>::stream(s, indent + "  ", v.forward);
   }

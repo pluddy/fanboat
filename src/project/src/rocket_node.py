@@ -18,7 +18,7 @@ class rocket_node(object):
     fire = None
     timer = 0
     lost = 1
-    timesFired = 3
+    timesFired = 0
     defenseState = 0
     lostCount = 0
     spinDirection = 1
@@ -60,7 +60,7 @@ class rocket_node(object):
                 
             thresholdPixels = 30
 
-            targetY = (-dist / 4.2) - 20
+            targetY = (-dist / 4.2) - 10
             #print 'I see it!!'
 
             if y > targetY + thresholdPixels:

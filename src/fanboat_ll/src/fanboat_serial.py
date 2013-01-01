@@ -62,8 +62,7 @@ class TheNode(object):
 
   def main_loop(self):
     '''main loop get a packet from the port and parse it and publish it'''
-    r = rospy.Rate(400)
-
+    r = rospy.Rate(12)
     # Publish each byte as it comes in
     while not rospy.is_shutdown():
       # Wait for the start bytes 'CD'

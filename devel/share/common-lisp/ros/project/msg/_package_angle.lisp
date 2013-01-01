@@ -3,6 +3,8 @@
           HEADER
           ANGLE-VAL
           ANGLE
+          STATE-VAL
+          STATE
           FORWARD-VAL
           FORWARD
 ))

@@ -9,7 +9,7 @@ class PID(object):
 
 	fll = fanboatLL()
 	forwardL = 0.8
-	forwardR = 0.74
+	forwardR = 0.65
 	prevDiff = 0
 	errorYaw = 0
 
@@ -26,7 +26,7 @@ class PID(object):
 		rospy.Subscriber('/sensors', fanboatLL, self.sensor_callback)
 		rospy.Subscriber('/angle', angle, self.angle_callback)
 	def init_publishers(self):
-		self.motors = rospy.Publisher('motors', fanboatMotors, queue_size=1)
+		self.motors = rospy.Publisher('motors', fanboatMotors, queue_size=10)
 
 	def sensor_callback(self, f_ll):
 		self.fll = f_ll
