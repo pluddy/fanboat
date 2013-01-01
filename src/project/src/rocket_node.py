@@ -8,7 +8,7 @@ class rocket_node(object):
     #publisher1 = None
     #publisher2 = None
     subscriber1 = None
-    launcher = armageddon.Armageddon()
+    
     def __init__(self):
         rospy.init_node('rocket_node')
 
@@ -18,8 +18,15 @@ class rocket_node(object):
     #def init_publishers(self):
         #self.publisher1 = rospy.Publisher('rocket_topic',)
     def rocket_callback(self, rocket_msg):
-        print 'msg\n'
-        launcher.working()
+        launcher = armageddon.Armageddon()
+        if rocket_msg.stop == 1:
+            launcher.STOP()
+        elif rocket_msg.fire == 1:
+            launcher.FIRE()
+        elif rocket_msg.angle != 0.0:
+            print("turn plz")
+            launcher.LEFT(1000.0)
+            launcher.RIGHT(2500.0)
 
     def main_loop(self):
         #self.init_publishers
@@ -34,13 +41,13 @@ class rocket_node(object):
             rate.sleep()
 
 if __name__ == '__main__':
-        try:
-            print "main"
-            rocket = rocket_node()
-            print "rocket node"
-            rocket.main_loop()
+    try:
+        print "main"
+        rocket = rocket_node()
+        print "rocket node"
+        rocket.main_loop()
 
 
 
-        except rospy.ROSInterruptException:
-            pass
+    except rospy.ROSInterruptException:
+        pass
