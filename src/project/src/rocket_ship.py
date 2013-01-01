@@ -66,6 +66,7 @@ class rocket_ship(object):
 			#just got in defense mode, turn left and wait.
 			print 'defense state 2, yaw = ', self.fll.yaw
 			ang.angle = -90.0 # + self.fll.yaw
+			self.savedYaw = -90.0
 			if self.fll.yaw < -85.0 and self.fll.yaw > -95.0:
 				self.defenseState = 3
 		
@@ -77,7 +78,7 @@ class rocket_ship(object):
 			elif self.savedYaw == -90.0 and self.fll.yaw > -95.0 and self.fll.yaw < -85.0:
 				ang.forward = 1
 				self.savedYaw = None
-			elif self.left > 220 or self.right > 220:
+			elif self.left > 200 or self.right > 200:
 				if self.savedYaw is None:
 					if self.fll.yaw < 0:
 						self.savedYaw = 90.0

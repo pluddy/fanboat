@@ -11,6 +11,7 @@ class PID(object):
 	forwardL = 0.8
 	forwardR = 0.74
 	prevDiff = 0
+	errorYaw = 0
 	
 	p = 0.2
 	d = 1.0
@@ -34,12 +35,13 @@ class PID(object):
 		boat = fanboatMotors()
 		boat.left = 0.2 * self.leftScale
 		boat.right = 0.2 * self.rightScale
+		self.errorYaw = self.errorYaw + 0.04
 		
-		if ang.forward:
+		if ang.forward ==1:
 			boat.left = self.forwardL * self.leftScale
 			boat.right = self.forwardR * self.rightScale
 		else:
-			diff = ang.angle - self.fll.yaw
+			diff = ang.angle - (self.fll.yaw + self.errorYaw)
 			if diff > 180:
 				diff = diff - 360
 			elif diff < -180:
