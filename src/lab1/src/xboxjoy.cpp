@@ -18,8 +18,9 @@ private:
   ros::NodeHandle nh_;
 
   double x_, y_;
+  int lb_;
   double l_scale_, a_scale_;
-  ros::Publisher vel_pub_;
+  //ros::Publisher vel_pub_;
   ros::Subscriber joy_sub_;
   
 };
@@ -27,7 +28,8 @@ private:
 // %Tag(PARAMS)%
 xboxjoy::xboxjoy():
   x_(0),
-  y_(1)
+  y_(1),
+  lb_(4)
 {
 
 //  nh_.param("axis_linear", linear_, linear_);
@@ -36,52 +38,79 @@ xboxjoy::xboxjoy():
 //  nh_.param("scale_linear", l_scale_, l_scale_);
 // %EndTag(PARAMS)%
 // %Tag(PUB)%
-  vel_pub_ = nh_.advertise<fanboat_ll::fanboatMotors>("motors", 1);
+  //vel_pub_ = nh_.advertise<fanboat_ll::fanboatMotors>("motors", 1);
 // %EndTag(PUB)%
 // %Tag(SUB)%
-  joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 1, &xboxjoy::joyCallback, this);
+  joy_sub_ =  nh_.subscribe<sensor_msgs::Joy>("joy", 1, &xboxjoy::joyCallback, this);
+  
 // %EndTag(SUB)%
 }
+double left, right;
+bool on = false;
 // %Tag(CALLBACK)%
 void xboxjoy::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 {
-  fanboat_ll::fanboatMotors boat;
-  double x = joy->axes[x_];
-  double y = joy->axes[y_];
-  double left = 0, right = 0;
-  if(y > 0){
-    double thrust   = sqrt(x*x + y*y);
-    if(x>0){
-      right = thrust;
-      left = (1 - x)*thrust;
+  if(joy->buttons[lb_] == true) on = !on;
+
+  if(on == true){
+    double x = joy->axes[x_];
+    double y = joy->axes[y_];
+    left = 0.15; 
+    right = 0.15;
+    if(y >= 0){
+      double thrust = sqrt(x*x + y*y);
+      if (thrust > 1) thrust = 1;
+      //thrust = thrust *.5 + .5;
+      if(x>0){
+        right = thrust;
+        left = (1 - x)*thrust;
+      }
+      else{
+        left = thrust;
+        right = (1 +x)*thrust;
+      }
     }
-    else{
-      left = thrust;
-      right = (1 +x)*thrust;
-    }
-    //double proportionr = (x+ 1)/2;
-    //double proportionl = 1-proportionr;
-    //left = thrust*proportionl;
-    //right = thrust*proportionr; 
+    if(left < .15) left = .15;
+    if(right < .15) right = .15;\
   }
 
 
-  boat.left = left;
-  boat.right = right;
-  ROS_INFO("left: %f right: %f",left,right);
+
   
-  ros::Rate loop_rate(16);
-  loop_rate.sleep();
-  vel_pub_.publish(boat);
+  
+  
 }
 // %EndTag(CALLBACK)%
 // %Tag(MAIN)%
+bool firstTimeZero = false;
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "xboxjoy");
-  xboxjoy xboxjoy;
+  
+    ros::init(argc, argv, "xboxjoy");
+    xboxjoy xboxjoy;
+    fanboat_ll::fanboatMotors boat;
+    ros::Rate loop_rate(13);
+    ros::NodeHandle nh;
+    ros::Publisher vel_pub = nh.advertise<fanboat_ll::fanboatMotors>("motors", 1);
 
-  ros::spin();
-}
+    while(ros::ok()) {
+      if (on == true){     
+        boat.left = left;
+        boat.right = right;
+        ROS_INFO("left: %f right: %f on: %d",left,right, on);
+        vel_pub.publish(boat);
+      }
+      else{
+        boat.left = 0;
+        boat.right = 0;
+        ROS_INFO("left: %f right: %f on: %d",left,right, on);
+        vel_pub.publish(boat);
+      }
+      ros::spinOnce();
+      loop_rate.sleep();
+    } 
+    ros::spin();
+  }
+
 // %EndTag(MAIN)%
 // %EndTag(FULL)%
