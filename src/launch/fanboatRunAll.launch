@@ -1,0 +1,6 @@
+<launch>
+
+      <node pkg="joy" name="joy1" type="joy_node"/>
+	<node pkg ="fanboat_ll" name="$(anon foo)" type="read_serial.py"/>
+      <node pkg="lab1" name="xboxjoy" type="xboxjoy"/>
+</launch>
