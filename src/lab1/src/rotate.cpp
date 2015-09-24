@@ -27,9 +27,6 @@ private:
 // %EndTag(CLASSDEF)%
 // %Tag(PARAMS)%
 xboxjoy::xboxjoy():
-  x_(0),
-  y_(1),
-  lb_(4),
   dup_(13),
   ddown_(14)
 {
@@ -48,59 +45,24 @@ xboxjoy::xboxjoy():
 // %EndTag(SUB)%
 }
 double left, right;
-bool on = false;
-bool timed = false;
 // %Tag(CALLBACK)%
 void xboxjoy::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 {
-  timed = false;
+
   bool dup = joy->buttons[dup_];
   bool ddown = joy->buttons[ddown_];
-  if(joy->buttons[lb_] == true) on = !on;
   
-  if(on == true){
-    if(dup == true){
-      left = .29;
-      right = .289;
-    }
-    else if (ddown == true){
-      left = .30;
-      right = .28;
-      timed = true;
-    }
-    else{
-      double x = joy->axes[x_];
-      double y = joy->axes[y_];
-      left = 0.15; 
-      right = 0.15;
-      if(y >= 0){
-        double thrust = sqrt(x*x + y*y);
-        if (thrust > 1) thrust = 1;
-        thrust = thrust * .4;
-        //thrust = thrust *.5 + .5;
-        if(x>0){
-          right = thrust;
-          left = (1 - x)*thrust;
-        }
-        else{
-          left = thrust;
-          right = (1 +x)*thrust;
-        }
-      }
-      if(left < .15) left = .15;
-      if(right < .15) right = .15;
-    }
+  if(dup == true){
+    right = 1;
+    left = 0;
   }
-
-
-
-  
-  
-  
+  if (ddown == true){
+    right = 0;
+    left = 1;
+  } 
 }
 // %EndTag(CALLBACK)%
 // %Tag(MAIN)%
-bool firstTimeZero = false;
 int main(int argc, char** argv)
 {
   
@@ -110,33 +72,19 @@ int main(int argc, char** argv)
     ros::Rate loop_rate(13);
     ros::NodeHandle nh;
     ros::Publisher vel_pub = nh.advertise<fanboat_ll::fanboatMotors>("motors", 1);
-    bool done = false;
-    int i = 0;
 
-    while(ros::ok() && !done) {
-      if (on == true){     
-        boat.left = left;
-        boat.right = right;
-        ROS_INFO("left: %f right: %f on: %d i = %d",left,right, on, i);
-        vel_pub.publish(boat);
-      }
-      else{
-        boat.left = 0;
-        boat.right = 0;
-        ROS_INFO("left: %f right: %f on: %d i = %d",left,right, on, i);
-        vel_pub.publish(boat);
-      }
+    while(ros::ok()) {  
+      boat.left = left;
+      boat.right = right;
+      ROS_INFO("left: %f right: %f",left,right);
+      vel_pub.publish(boat);
       ros::spinOnce();
       loop_rate.sleep();
-      if(timed){
-        i++;
-        if(i >= 45) {
-          done = true;
-        }
-      } 
-    } 
-    ros::spin();
-  }
+    }
+    
+  ros::spin();
+    
+}
 
 // %EndTag(MAIN)%
 // %EndTag(FULL)%

@@ -16,3 +16,7 @@ back was the best
 min force
 weight lifted = 150g
 1.47N
+
+max rotational rate is 284.81 degrees/sec
+pretty much in place 
+

@@ -192,3 +192,13 @@ include_directories(
 add_executable(xboxjoy src/xboxjoy.cpp)
 target_link_libraries (xboxjoy ${catkin_LIBRARIES})
 add_dependencies(xboxjoy lab1_generate_message_cpp)
+
+add_executable(rotate src/rotate.cpp)
+target_link_libraries (rotate ${catkin_LIBRARIES})
+add_dependencies(rotate lab1_generate_message_cpp)
+
+add_executable(driveDistance src/driveDistance.cpp)
+target_link_libraries (driveDistance ${catkin_LIBRARIES})
+add_dependencies(driveDistance lab1_generate_message_cpp)
+
+
