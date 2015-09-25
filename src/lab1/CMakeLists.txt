@@ -201,4 +201,8 @@ add_executable(driveDistance src/driveDistance.cpp)
 target_link_libraries (driveDistance ${catkin_LIBRARIES})
 add_dependencies(driveDistance lab1_generate_message_cpp)
 
+add_executable(rotateDegrees src/rotateDegrees.cpp)
+target_link_libraries (rotateDegrees ${catkin_LIBRARIES})
+add_dependencies(rotateDegrees lab1_generate_message_cpp)
+
 
