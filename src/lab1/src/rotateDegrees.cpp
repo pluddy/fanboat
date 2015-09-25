@@ -10,6 +10,7 @@ class xboxjoy
 public:
   xboxjoy();
 
+//Private functions/variables
 private:
   void joyCallback(const sensor_msgs::Joy::ConstPtr& joy);
   void fanboatLLCallback(const fanboat_ll::fanboatLL::ConstPtr& fll);
@@ -23,6 +24,7 @@ private:
   ros::Subscriber fanboatLL_sub_;
 };
 
+//Set values to read from xbox controller
 xboxjoy::xboxjoy():
   x_(0),
   y_(1),
@@ -31,10 +33,12 @@ xboxjoy::xboxjoy():
   dup_(13),
   ddown_(14)
 {
+  //Subscribe to joy and fanboatLL
   joy_sub_ =  nh_.subscribe<sensor_msgs::Joy>("joy", 1, &xboxjoy::joyCallback, this);
   fanboatLL_sub_ = nh_.subscribe<fanboat_ll::fanboatLL>("fanboatLL", 1, &xboxjoy::fanboatLLCallback, this);
 }
 
+//Variables to communicate left/right motor power and current/final yaw values
 int i = 0;
 double left, right;
 bool on = false;
@@ -45,6 +49,7 @@ double yaw = 0;
 int destDegrees;
 double degreesToSpin = -90;
 
+//Update the yaw - if it is the first time, set the initial yaw and calculate end yaw
 void xboxjoy::fanboatLLCallback(const fanboat_ll::fanboatLL::ConstPtr& fll)
 { 
   yaw = fll->yaw - 180;
@@ -54,6 +59,7 @@ void xboxjoy::fanboatLLCallback(const fanboat_ll::fanboatLL::ConstPtr& fll)
   }
 }
 
+//Read input from the joystick
 void xboxjoy::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 {
   bool dup = joy->buttons[dup_];
@@ -62,12 +68,12 @@ void xboxjoy::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
   if(joy->buttons[rb_] == true) done = !done;
   
   if(on == true) {
-    if(dup == true) {
+    if(dup == true) { //turn right
       left = 1;
       right = 0;
       initYaw = yaw;
     }
-    else if (ddown == true) {
+    else if (ddown == true) { //turn left
       left = 0;
       right = 1;
       initYaw = yaw;
@@ -94,30 +100,29 @@ int main(int argc, char** argv)
     while(ros::ok()) {
       //if (on == true && !done) {     
       if(!done) {
-        ROS_INFO("Not Done");
-        if(degreesToSpin > 0) {      
+        if(degreesToSpin > 0) {  //Turn right    
           boat.left = 0.37;
           boat.right = 0;
-        } else {
+        } else { //Turn left
           boat.right = 0.28;
           boat.left = 0;
         }
 
         ROS_INFO("left: %f right: %f on: %d yaw: %.2f",boat.left,boat.right, on, yaw);
-        vel_pub.publish(boat);
+        vel_pub.publish(boat); //Publish the values
       }
       else{
-        boat.left = 0;
+        boat.left = 0; //Stop the boat
         boat.right = 0;
 
         ROS_INFO("left: %f right: %f on: %d",left,right, on);
         vel_pub.publish(boat);
       }
       ros::spinOnce();
-      loop_rate.sleep();
+      loop_rate.sleep(); //Wait
       if(!done && (yaw < destDegrees + error && yaw > destDegrees - error) && initYaw >= 0) {
           ROS_INFO("Yaw: %f, destDegrees: %d", yaw, destDegrees);
-          done = true;
+          done = true; //Reached destination yaw, stop
       }
     } 
     ros::spin();
