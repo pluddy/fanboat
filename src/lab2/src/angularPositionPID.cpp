@@ -37,11 +37,34 @@ angularPositionPID::angularPositionPID()
 //Variables
 lab2::angle_msg ang;
 fanboat_ll::fanboatLL fll;
+double left,right;
+double init = -1000;
+
+void anglepid(double target)
+{
+	double diff = target - (fll.yaw-init);
+	ROS_INFO("diff = %f ",diff);
+	double P = 1/180.0;
+	if(diff > 0){
+		left = P*diff;
+		left = (left * .7) + 0.3;
+	} else {
+		right = P*(360 - diff);
+		right = (right * .7) + 0.3;
+	}
+	ROS_INFO("left = %f right = %f", left, right);
+}
 
 //Get driving info and publish to fanboatLL
 void angularPositionPID::angle_callback(const lab2::angle_msg::ConstPtr& am)
 {
 	fanboat_ll::fanboatMotors boat;
+	left = 0.25;
+	right = 0.25;
+	ROS_INFO("angle = %f", am->angle);
+	anglepid(am->angle);
+	boat.left = left;
+	boat.right = right;
 
 	//TODO: Call a function to do PID stuff here
 
@@ -52,6 +75,10 @@ void angularPositionPID::angle_callback(const lab2::angle_msg::ConstPtr& am)
 void angularPositionPID::fanboatLL_callback(const fanboat_ll::fanboatLL::ConstPtr& f_ll)
 {
 	fll = *f_ll;
+	fll.yaw = fll.yaw - 360;
+	if(init == -1000){
+		init = fll.yaw;
+	}
 }
 
 int main(int argc, char** argv)

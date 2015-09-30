@@ -33,25 +33,23 @@ double angle, thrust;
 //callback/interrupt
 void joyAngleIntegrater::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 {
-	double x = joy->axes[x_];
+	double x = -1*joy->axes[x_];
 	double y = joy->axes[y_];
 
 	//Calculate thrust
-	double thrust = sqrt(x * x + y * y);
+	thrust = sqrt(x * x + y * y);
+	ROS_INFO("thrust = %f", thrust);
 	if(thrust > 1.0) thrust = 1.0;
 	if(thrust < 0.0) thrust = 0.0;
 
 	//Calculate angle
-	double angle;
 	if(x == 0) {
-		angle = (y >= 0) ? 90 : 270; //Avoid dividing by 0 if stick is up or down
+		angle = (y >= 0) ? 0 : 180; //Avoid dividing by 0 if stick is up or down
 	} else {
 		angle = atan(y / x) / M_PI * 180; //Get angle in degrees
+		angle = (x > 0) ? 90 - angle : (90 + angle)*-1;
 	}
-	angle = (360 - angle) + 90; //Adjust so that 0 is forward and degrees are clockwise (90 is right)
-	if(angle >= 360.0) {
-		angle -= 360;
-	}
+	ROS_INFO("angle = %f", angle);
 
 	//Publish the angle_msg
 	lab2::angle_msg msg;
