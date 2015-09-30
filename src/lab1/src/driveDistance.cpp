@@ -47,23 +47,23 @@ int countIterations = 0;
 void xboxjoy::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 {
   if(joy->buttons[lb_] == true) on = !on;
-  
-  if(on == true && !done){//forward
-    left = 0.36; 
+  //forward
+  if(on == true && !done){
+    left = 0.32; 
     right = 0.277;
-  }
-  else if (!done){//idle
-    left = .30;
-    right = .22;
-  }
-  else{//off
+  }//idle
+  else if (!done){
+    left = .2;
+    right = .15;
+  }//off
+  else{
     left = 0;
     right = 0;
   }
 }
 
 
-double totalDistance = 1;
+double totalDistance = 3;
 bool firstTimeZero = false;
 
 int main(int argc, char** argv)
@@ -78,7 +78,7 @@ int main(int argc, char** argv)
     done = false;
     i = 0;
     int j = 0;
-    double pubs = 9;
+    double pubs = 13;
     double iterations = totalDistance /.5;//iterations is how many times it will go .5m
     while(ros::ok()) {
       j =0;
@@ -89,11 +89,11 @@ int main(int argc, char** argv)
         ros::spinOnce();
         loop_rate.sleep();
         ROS_INFO("left: %f right: %f on: %d j = %d iterations = %lf !on",left,right, on, j, iterations);//idle
-      }
-      while(!done && on && ros::ok()){//going forward
-        if(iterations < 1)//if you get something like 1.3m
-          pubs = pubs*iterations;
-        for (j = 0; j < pubs && ros::ok() && on; j++ ){//1 iteration
+      }//going forward
+      while(!done && on && ros::ok()){
+        if(iterations < 1)
+          pubs = pubs*iterations;//if you get something like 1.3m//1 iteration
+        for (j = 0; j < pubs && ros::ok() && on; j++ ){
           boat.left = left;
           boat.right = right;
           vel_pub.publish(boat);//goes forward
@@ -104,7 +104,7 @@ int main(int argc, char** argv)
         iterations = iterations - 1;//minus the iterations
         if (iterations <= 0.05)
           done = true;
-        usleep(540000);//sleep so that you dont go too fast between iterations
+        usleep(640000);//sleep so that you dont go too fast between iterations
       }
       j = 0;
       left = 0.30;
@@ -114,5 +114,6 @@ int main(int argc, char** argv)
     ros::spinOnce();
     loop_rate.sleep();
     }  
-    ros::spin()
+    ros::spin();
+
 }
