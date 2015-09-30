@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -44,11 +45,10 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+ add_message_files(
+   FILES
+   angle_msg.msg
+ )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -65,10 +65,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
+ )
 
 ###################################
 ## catkin specific configuration ##
@@ -82,7 +82,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES lab2
-#  CATKIN_DEPENDS roscpp rospy std_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
 #  DEPENDS system_lib
 )
 
@@ -165,3 +165,15 @@ include_directories(
 add_executable(joy_constant src/joy_constant.cpp)
 target_link_libraries (joy_constant ${catkin_LIBRARIES})
 add_dependencies(joy_constant lab2_generate_message_cpp)
+
+add_executable(joyAngleIntegrater src/joyAngleIntegrater.cpp)
+target_link_libraries (joyAngleIntegrater ${catkin_LIBRARIES})
+add_dependencies(joyAngleIntegrater lab2_generate_message_cpp)
+
+add_executable(angularPositionPID src/angularPositionPID.cpp)
+target_link_libraries (angularPositionPID ${catkin_LIBRARIES})
+add_dependencies(angularPositionPID lab2_generate_message_cpp)
+
+add_executable(arbitrator src/arbitrator.cpp)
+target_link_libraries (arbitrator ${catkin_LIBRARIES})
+add_dependencies(arbitrator lab2_generate_message_cpp)
