@@ -35,7 +35,7 @@ arbitrator::arbitrator():
 	lb_(4)      //on
 {
 	//Subscribe to joy_constant for button controls to arbitrate
-	joy_sub_ =  nh_.subscribe<sensor_msgs::Joy>("joy_constant", 1, &arbitrator::joy_callback, this);
+	joy_sub_ =  nh_.subscribe<sensor_msgs::Joy>("joy", 1, &arbitrator::joy_callback, this);
 	
 	//Subscribe to topics to arbitrate between
 	angle_joy_sub_ = nh_.subscribe<lab2::angle_msg>("angle_joy", 1, &arbitrator::angle_joy_callback, this);
@@ -48,7 +48,7 @@ arbitrator::arbitrator():
 }
 
 //Variables to communicate left/right motor power and current/final yaw values
-bool on = true;
+bool on = false;
 int arb_value = 0; //0 = joy, 1 = tri, 2 = rc, else publish 0's
 
 //If this topic should be forwarded, forward it
@@ -61,10 +61,10 @@ void arbitrator::angle_joy_callback(const lab2::angle_msg::ConstPtr& ang)
 	
 	if(on && arb_value == 0) {
 		arb_pub.publish(msg);
-	} else if(!on || arb_value < 0 || arb_value > 0) {
+	} else if(!on || arb_value < 0 || arb_value > 2) {
 		msg.angle = 0;
 		msg.thrust = 0;
-		arb_pub.publish(msg);
+		//arb_pub.publish(msg);
 	}
 }
 
