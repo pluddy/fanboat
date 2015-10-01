@@ -31,6 +31,12 @@ void joy_constant::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 
 int main(int argc, char** argv)
 {
+	std::vector<float> temp1(6, 0);
+	std::vector<int> temp2(6, 0);
+	joy_values.axes = temp1;
+
+	joy_values.buttons = temp2;
+	
 	ros::init(argc, argv, "joy_constant");
 	joy_constant joy_constant;
 	ros::Rate loop_rate(13);//set frequency to 13Hz

@@ -49,6 +49,11 @@ void joyAngleIntegrater::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 		angle = atan(y / x) / M_PI * 180; //Get angle in degrees
 		angle = (x > 0) ? 90 - angle : (90 + angle)*-1;
 	}
+	if (thrust< .05)
+	{
+		thrust = 0;
+		angle = 0;
+	}
 	ROS_INFO("angle = %f", angle);
 
 	//Publish the angle_msg

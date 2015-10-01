@@ -5,5 +5,4 @@
 	       <node pkg="lab2" name="joy_constant" type="joy_constant"/>
 	       <node pkg="lab2" name="joyAngleIntegrater" type="joyAngleIntegrater"/>
 	       <node pkg="lab2" name="arbitrator" type="arbitrator"/>
-	       <node pkg="lab2" name="angularPositionPID" type="angularPositionPID"/>
 </launch>
