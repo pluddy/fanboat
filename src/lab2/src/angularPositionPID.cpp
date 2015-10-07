@@ -47,23 +47,21 @@ void anglepid(double target)
 	double diff = target - (fll.yaw-init);
 	diff = (diff > 180) ? diff-360 : (diff < -180)? diff + 360 : diff;
 	ROS_INFO("diff = %f ",diff);
-	double P = 1/250.0;
-	double D = .05;
+	double P = 1/90.0;
+	double D = 0;
 	double error = diff - previousDiff;
 	previousDiff = diff;
 	double dFactor = D*error;
+	ROS_INFO("pFactor = %f dFactor = %f", P*diff, dFactor);
 	if(diff > 0){
 		left = P*diff + dFactor;
-		left = (left * .7) + 0.3;
-		left = left * 1.1;
-		left = 1;
-	right = .15;
+		left = left * 1.2;
+		left = (left * .85) + 0.15;
+		
 	} else {
-		right = P*(180 - diff) - dFactor;
-		right = (right * .7) + 0.3;
-		right = right * .4;
-		left = .15;
-	right = 1;
+		right = P*(-1*diff) - dFactor;
+		right = right * .7;
+		right = (right * .85) + 0.15;
 	}
 
 	ROS_INFO("left = %f right = %f", left, right);
@@ -75,7 +73,7 @@ void angularPositionPID::angle_callback(const lab2::angle_msg::ConstPtr& am)
 	fanboat_ll::fanboatMotors boat;
 	left = 0.15;
 	right = 0.15;
-	ROS_INFO("angle = %f  left = %f  right = %f", am->angle, left,right);
+	ROS_INFO("angle = %f", am->angle);
 	if(!am->thrust <= .05){
 		anglepid(am->angle);
 	}
