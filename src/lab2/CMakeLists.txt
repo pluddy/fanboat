@@ -177,3 +177,7 @@ add_dependencies(angularPositionPID lab2_generate_message_cpp)
 add_executable(arbitrator src/arbitrator.cpp)
 target_link_libraries (arbitrator ${catkin_LIBRARIES})
 add_dependencies(arbitrator lab2_generate_message_cpp)
+
+add_executable(IRRangeFinderFilter src/IRRangeFinderFilter.cpp)
+target_link_libraries (IRRangeFinderFilter ${catkin_LIBRARIES})
+add_dependencies(IRRangeFinderFilter lab2_generate_message_cpp)
