@@ -8,6 +8,8 @@ class angularPositionPID
 {
 public:
 	angularPositionPID();
+	
+
 
 	//Private functions/variables
 private:
@@ -17,10 +19,16 @@ private:
 	ros::NodeHandle nh_;
 
 	ros::Publisher motors_pub_;
+
 	ros::Subscriber angle_sub_;
 	ros::Subscriber fanboatLL_sub_;
+	
 };
 
+double pValue;
+double dValue;
+double rightScale;
+double leftScale;
 angularPositionPID::angularPositionPID()
 {
 	//Subscribe to arbitated angle messages
@@ -32,36 +40,52 @@ angularPositionPID::angularPositionPID()
 	//Publish to motors topic
 	motors_pub_ = nh_.advertise<fanboat_ll::fanboatMotors>("motors", 1);
 
+
+	nh_.getParam("pValue", pValue);
+	nh_.getParam("dValue", dValue);
+	nh_.getParam("rightScale", rightScale);
+	nh_.getParam("leftScale", leftScale);
+	
+
 }
 
 //Variables
+
 lab2::angle_msg ang;
 fanboat_ll::fanboatLL fll;
 double left,right;
 double init = -1000;
 double previousDiff = 0;
 
+//pulled from the arduino library.
+double map(double x, double in_min, double in_max, double out_min, double out_max)
+{
+	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
 void anglepid(double target)
 {
-	
+
 	double diff = target - (fll.yaw-init);
 	diff = (diff > 180) ? diff-360 : (diff < -180)? diff + 360 : diff;
 	ROS_INFO("diff = %f ",diff);
-	double P = 1/90.0;
-	double D = 0;
+	double P = 1/pValue;
+	double D = dValue;
 	double error = diff - previousDiff;
 	previousDiff = diff;
 	double dFactor = D*error;
 	ROS_INFO("pFactor = %f dFactor = %f", P*diff, dFactor);
 	if(diff > 0){
 		left = P*diff + dFactor;
-		left = left * 1.2;
-		left = (left * .85) + 0.15;
+		if(left > 1) left=1;
+		left = map(left, 0.0,1.0,.4,.7);
+		left = left * leftScale;
+		
 		
 	} else {
 		right = P*(-1*diff) - dFactor;
-		right = right * .7;
-		right = (right * .85) + 0.15;
+		if(right > 1) right=1;
+		right = map(right, 0.0,1.0,.3,.50);
+		right = right * rightScale;
 	}
 
 	ROS_INFO("left = %f right = %f", left, right);
@@ -71,10 +95,9 @@ void anglepid(double target)
 void angularPositionPID::angle_callback(const lab2::angle_msg::ConstPtr& am)
 {
 	fanboat_ll::fanboatMotors boat;
-	left = 0.15;
-	right = 0.15;
-	ROS_INFO("angle = %f", am->angle);
-	if(!am->thrust <= .05){
+	left = 0.2;
+	right = 0.2;
+	if(!am->thrust <= .1){
 		anglepid(am->angle);
 	}
 
@@ -98,7 +121,7 @@ void angularPositionPID::fanboatLL_callback(const fanboat_ll::fanboatLL::ConstPt
 
 int main(int argc, char** argv)
 {
-
+	
 	ros::init(argc, argv, "angularPositionPID");
 	angularPositionPID angularPositionPID;
 

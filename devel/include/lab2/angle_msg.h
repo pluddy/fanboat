@@ -60,12 +60,14 @@ struct angle_msg_
   angle_msg_()
     : header()
     , angle(0.0)
-    , thrust(0.0)  {
+    , thrust(0.0)
+    , diff(0.0)  {
     }
   angle_msg_(const ContainerAllocator& _alloc)
     : header(_alloc)
     , angle(0.0)
-    , thrust(0.0)  {
+    , thrust(0.0)
+    , diff(0.0)  {
     }
 
 
@@ -78,6 +80,9 @@ struct angle_msg_
 
    typedef double _thrust_type;
   _thrust_type thrust;
+
+   typedef double _diff_type;
+  _diff_type diff;
 
 
 
@@ -156,12 +161,12 @@ struct MD5Sum< ::lab2::angle_msg_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "7261fb9657d2ddd299cdf43412964375";
+    return "1585d3bc0f1e8d257706168bbc2cb4b1";
   }
 
   static const char* value(const ::lab2::angle_msg_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x7261fb9657d2ddd2ULL;
-  static const uint64_t static_value2 = 0x99cdf43412964375ULL;
+  static const uint64_t static_value1 = 0x1585d3bc0f1e8d25ULL;
+  static const uint64_t static_value2 = 0x7706168bbc2cb4b1ULL;
 };
 
 template<class ContainerAllocator>
@@ -187,6 +192,9 @@ float64 angle\n\
 \n\
 #Thrust (0.0-1.0)\n\
 float64 thrust\n\
+\n\
+#Diff (-180.0- 180.0, 0 is no difference between current and yaw)\n\
+float64 diff\n\
 \n\
 ================================================================================\n\
 MSG: std_msgs/Header\n\
@@ -226,6 +234,7 @@ namespace serialization
       stream.next(m.header);
       stream.next(m.angle);
       stream.next(m.thrust);
+      stream.next(m.diff);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER;
@@ -251,6 +260,8 @@ struct Printer< ::lab2::angle_msg_<ContainerAllocator> >
     Printer<double>::stream(s, indent + "  ", v.angle);
     s << indent << "thrust: ";
     Printer<double>::stream(s, indent + "  ", v.thrust);
+    s << indent << "diff: ";
+    Printer<double>::stream(s, indent + "  ", v.diff);
   }
 };
 

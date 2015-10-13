@@ -5,4 +5,6 @@
           ANGLE
           THRUST-VAL
           THRUST
+          DIFF-VAL
+          DIFF
 ))
