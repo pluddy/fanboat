@@ -21,11 +21,6 @@
     :reader thrust
     :initarg :thrust
     :type cl:float
-    :initform 0.0)
-   (diff
-    :reader diff
-    :initarg :diff
-    :type cl:float
     :initform 0.0))
 )
 
@@ -51,11 +46,6 @@
 (cl:defmethod thrust-val ((m <angle_msg>))
   (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader lab2-msg:thrust-val is deprecated.  Use lab2-msg:thrust instead.")
   (thrust m))
-
-(cl:ensure-generic-function 'diff-val :lambda-list '(m))
-(cl:defmethod diff-val ((m <angle_msg>))
-  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader lab2-msg:diff-val is deprecated.  Use lab2-msg:diff instead.")
-  (diff m))
 (cl:defmethod roslisp-msg-protocol:serialize ((msg <angle_msg>) ostream)
   "Serializes a message object of type '<angle_msg>"
   (roslisp-msg-protocol:serialize (cl:slot-value msg 'header) ostream)
@@ -69,15 +59,6 @@
     (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
   (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'thrust))))
-    (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 32) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 40) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
-  (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'diff))))
     (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
@@ -110,16 +91,6 @@
       (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
     (cl:setf (cl:slot-value msg 'thrust) (roslisp-utils:decode-double-float-bits bits)))
-    (cl:let ((bits 0))
-      (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 32) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 40) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
-    (cl:setf (cl:slot-value msg 'diff) (roslisp-utils:decode-double-float-bits bits)))
   msg
 )
 (cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<angle_msg>)))
@@ -130,20 +101,19 @@
   "lab2/angle_msg")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<angle_msg>)))
   "Returns md5sum for a message object of type '<angle_msg>"
-  "1585d3bc0f1e8d257706168bbc2cb4b1")
+  "7261fb9657d2ddd299cdf43412964375")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'angle_msg)))
   "Returns md5sum for a message object of type 'angle_msg"
-  "1585d3bc0f1e8d257706168bbc2cb4b1")
+  "7261fb9657d2ddd299cdf43412964375")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<angle_msg>)))
   "Returns full string definition for message of type '<angle_msg>"
-  (cl:format cl:nil "Header header~%~%#Angle (0.0-359.999, 0 is forward)~%float64 angle~%~%#Thrust (0.0-1.0)~%float64 thrust~%~%#Diff (-180.0- 180.0, 0 is no difference between current and yaw)~%float64 diff~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
+  (cl:format cl:nil "Header header~%~%#Angle (0.0-359.999, 0 is forward)~%float64 angle~%~%#Thrust (0.0-1.0)~%float64 thrust~%~%~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'angle_msg)))
   "Returns full string definition for message of type 'angle_msg"
-  (cl:format cl:nil "Header header~%~%#Angle (0.0-359.999, 0 is forward)~%float64 angle~%~%#Thrust (0.0-1.0)~%float64 thrust~%~%#Diff (-180.0- 180.0, 0 is no difference between current and yaw)~%float64 diff~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
+  (cl:format cl:nil "Header header~%~%#Angle (0.0-359.999, 0 is forward)~%float64 angle~%~%#Thrust (0.0-1.0)~%float64 thrust~%~%~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <angle_msg>))
   (cl:+ 0
      (roslisp-msg-protocol:serialization-length (cl:slot-value msg 'header))
-     8
      8
      8
 ))
@@ -153,5 +123,4 @@
     (cl:cons ':header (header msg))
     (cl:cons ':angle (angle msg))
     (cl:cons ':thrust (thrust msg))
-    (cl:cons ':diff (diff msg))
 ))

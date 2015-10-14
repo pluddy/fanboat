@@ -21,8 +21,8 @@ private:
 
 //all the buttons/axis that we used
 joyAngleIntegrater::joyAngleIntegrater():
-	x_(0),
-	y_(1)
+x_(0),
+y_(1)
 {
 	joy_sub_ =  nh_.subscribe<sensor_msgs::Joy>("joy_constant", 1, &joyAngleIntegrater::joyCallback, this);
 	ang_pub = nh_.advertise<lab2::angle_msg>("angle_joy", 1);
@@ -38,7 +38,7 @@ void joyAngleIntegrater::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 
 	//Calculate thrust
 	thrust = sqrt(x * x + y * y);
-	ROS_INFO("thrust = %f", thrust);
+	//ROS_INFO("thrust = %f", thrust);
 	if(thrust > 1.0) thrust = 1.0;
 	if(thrust < 0.0) thrust = 0.0;
 
@@ -54,7 +54,7 @@ void joyAngleIntegrater::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 		thrust = 0;
 		angle = 0;
 	}
-	ROS_INFO("angle = %f", angle);
+	//ROS_INFO("angle = %f", angle);
 
 	//Publish the angle_msg
 	lab2::angle_msg msg;
