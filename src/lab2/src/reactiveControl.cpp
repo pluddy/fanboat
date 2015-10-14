@@ -29,7 +29,7 @@ double leftScale;
 reactiveControl::reactiveControl()
 {
 	//Subscribe to arbitated angle messages
-	fanboatLL_sub_ =  nh_.subscribe<fanboat_ll::fanboatLL>("fanboatLL", 1, &reactiveControl::fanboatLL_callback, this);
+	fanboatLL_sub_ =  nh_.subscribe<fanboat_ll::fanboatLL>("sensors", 1, &reactiveControl::fanboatLL_callback, this);
 
 	//Publish to motors topic
 	motors_pub_ = nh_.advertise<fanboat_ll::fanboatMotors>("motors", 1);

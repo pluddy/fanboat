@@ -24,7 +24,7 @@ private:
 //setting up the button variables
 triangle::triangle()
 {
-  fll_sub_ =  nh_.subscribe<fanboat_ll::fanboatLL>("fll_sync", 1, &triangle::fanboatLL_callback, this);
+  fll_sub_ =  nh_.subscribe<fanboat_ll::fanboatLL>("sensors", 1, &triangle::fanboatLL_callback, this);
   angle_tri_pub_ = nh_.advertise<lab2::angle_msg>("angle_tri", 1);
 }
 

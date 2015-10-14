@@ -178,10 +178,14 @@ add_executable(arbitrator src/arbitrator.cpp)
 target_link_libraries (arbitrator ${catkin_LIBRARIES})
 add_dependencies(arbitrator lab2_generate_message_cpp)
 
-add_executable(IRRangeFinderFilter src/IRRangeFinderFilter.cpp)
-target_link_libraries (IRRangeFinderFilter ${catkin_LIBRARIES})
-add_dependencies(IRRangeFinderFilter lab2_generate_message_cpp)
+add_executable(sensorFilter src/sensorFilter.cpp)
+target_link_libraries (sensorFilter ${catkin_LIBRARIES})
+add_dependencies(sensorFilter lab2_generate_message_cpp)
 
 add_executable(reactiveControl src/reactiveControl.cpp)
 target_link_libraries (reactiveControl ${catkin_LIBRARIES})
 add_dependencies(reactiveControl lab2_generate_message_cpp)
+
+add_executable(triangle src/triangle.cpp)
+target_link_libraries (triangle ${catkin_LIBRARIES})
+add_dependencies(triangle lab2_generate_message_cpp)

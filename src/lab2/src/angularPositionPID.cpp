@@ -32,7 +32,7 @@ double leftScale;
 angularPositionPID::angularPositionPID()
 {
 	//Subscribe to arbitated angle messages
-	fanboatLL_sub_ =  nh_.subscribe<fanboat_ll::fanboatLL>("fll_sync", 1, &angularPositionPID::fanboatLL_callback, this);
+	fanboatLL_sub_ =  nh_.subscribe<fanboat_ll::fanboatLL>("sensors", 1, &angularPositionPID::fanboatLL_callback, this);
 
 	//Subscribe to topics to arbitrate between
 	angle_sub_ = nh_.subscribe<lab2::angle_msg>("angle_arb", 1, &angularPositionPID::angle_callback, this);
