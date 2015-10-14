@@ -41,7 +41,7 @@ void joyAngleIntegrater::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 	//ROS_INFO("thrust = %f", thrust);
 	if(thrust > 1.0) thrust = 1.0;
 	if(thrust < 0.0) thrust = 0.0;
-
+	thrust = thrust * 0.2 + 0.2;
 	//Calculate angle
 	if(x == 0) {
 		angle = (y >= 0) ? 0 : 180; //Avoid dividing by 0 if stick is up or down
@@ -49,9 +49,9 @@ void joyAngleIntegrater::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 		angle = atan(y / x) / M_PI * 180; //Get angle in degrees
 		angle = (x > 0) ? 90 - angle : (90 + angle)*-1;
 	}
-	if (thrust< .05)
+	if (thrust< .25)
 	{
-		thrust = 0;
+		thrust = 0.2;
 		angle = 0;
 	}
 	//ROS_INFO("angle = %f", angle);

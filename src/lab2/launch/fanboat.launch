@@ -8,7 +8,7 @@
 	       <node pkg="lab2" name="reactiveControl" output="screen" type="reactiveControl"/>
 	       <node pkg="lab2" name="arbitrator" output="screen" type="arbitrator"/>
 	       <node pkg="lab2" name="angularPositionPID" output="screen" type="angularPositionPID"/>
-           <node pkg="lab2" name="triangle" output="screen" type="triangle"/>
+           <node pkg="lab2" name="triangle" type="triangle"/>
 	       <param name="pValue" type="double" value="120"/>
 	       <param name="dValue" type="double" value=".11"/>
 	       <param name="rightScale" type="double" value="1"/>

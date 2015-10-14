@@ -54,7 +54,7 @@ arbitrator::arbitrator():
 	}
 
 //Variables to communicate left/right motor power and current/final yaw values
-	bool on = false;
+bool on = false;
 int arb_value = 0; //0 = joy, 1 = tri, 2 = rc, else publish 0's
 bool up = false, down = false, left = false, right = false;
 //If this topic should be forwarded, forward it

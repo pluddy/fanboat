@@ -76,7 +76,7 @@ void reactiveControl::fanboatLL_callback(const fanboat_ll::fanboatLL::ConstPtr& 
 	reactive(leftS,rightS);
 	boat.right = right;
 	boat.left = left;
-	motors_pub_.publish(boat);
+	//motors_pub_.publish(boat);
 }
 
 int main(int argc, char** argv)
