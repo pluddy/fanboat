@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     ros::NodeHandle nh;
 
     i = 0;
-    double pubs = 12;
+    double pubs = 16;
 
 	targetAngle = actualAngle + 120;
 	targetAngle = (targetAngle > 180) ? targetAngle - 360 : targetAngle; //Make sure this value stays within [-180,180]
@@ -53,7 +53,7 @@ int main(int argc, char** argv)
     while(ros::ok()) {
     	double angle, thrust;
     	if(isTurning) {
-    		if(fabs(targetAngle - actualAngle) < 15.0) {
+    		if(fabs(targetAngle - actualAngle) < 8.0) {
     			isTurning = false;
     			targetAngle += 120;
     			targetAngle = (targetAngle > 180) ? targetAngle - 360 : targetAngle; //Make sure this value stays within [-180,180]
