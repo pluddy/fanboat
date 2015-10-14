@@ -4,6 +4,8 @@
 #include <fanboat_ll/fanboatLL.h>
 #include <math.h>
 
+//#define I_FACTOR_MAX 0.1
+
 class angularPositionPID
 {
 public:
@@ -27,6 +29,7 @@ private:
 
 double pValue;
 double dValue;
+double iValue, iMax;
 double rightScale;
 double leftScale;
 angularPositionPID::angularPositionPID()
@@ -43,6 +46,8 @@ angularPositionPID::angularPositionPID()
 
 	nh_.getParam("pValue", pValue);
 	nh_.getParam("dValue", dValue);
+	nh_.getParam("iValue", iValue);
+	nh_.getParam("iMax", iMax);
 	nh_.getParam("rightScale", rightScale);
 	nh_.getParam("leftScale", leftScale);
 	
@@ -55,6 +60,7 @@ lab2::angle_msg ang;
 fanboat_ll::fanboatLL fll;
 double left,right;
 double previousDiff = 0;
+double previousIntegral = 0;
 int state = 0;
 
 //pulled from the arduino library.
@@ -67,20 +73,38 @@ void anglepid(double target)
 	double diff = target - fll.yaw;
 	diff = (diff > 180) ? diff-360 : (diff < -180)? diff + 360 : diff;
 	ROS_INFO("diff = %f ",diff);
+
+	//Setup PID values
 	double P = 1/pValue;
 	double D = dValue;
+	double I = iValue;
+
+	//Calculate P factor
+	double pFactor = P*diff;
+
+	//Calculate D factor
 	double error = diff - previousDiff;
 	previousDiff = diff;
 	double dFactor = D*error;
-	ROS_INFO("pFactor = %f dFactor = %f", P*diff, dFactor);
+
+	//Calculate I factor
+	double integral = previousIntegral + diff;
+	integral = (integral * I > iMax) ? iMax / I : (integral * I < -iMax) ? -iMax / I : integral; //Cap the integral value (both + and -)
+	if(fabs(diff) < 3 || fabs(diff) > 50) { //Behaves funny when diff is too large (around 180 degrees), and should have no effect if diff is good enough.
+		integral = 0;
+	}
+	double iFactor = I*integral;
+	previousIntegral = integral;
+
+	ROS_INFO("pFactor = %f dFactor = %f iFactor = %f", pFactor, dFactor, iFactor);
 	if(diff > 0) {
-		left = P*diff + dFactor;
+		left = pFactor + dFactor + iFactor;
 		if(left > 1) left=1;
 		left = map(left, 0.0,1.0,.45,.7);
 		left = left * leftScale;
 		
 	} else {
-		right = P*(-1*diff) - dFactor;
+		right = -pFactor - dFactor - iFactor;
 		if(right > 1) right=1;
 		right = map(right, 0.0,1.0,.3,.5);
 		right = right * rightScale;
@@ -89,10 +113,6 @@ void anglepid(double target)
 	ROS_INFO("left = %f right = %f", left, right);
 }
 
-int count;
-double straight = 0.35;
-double turn = 0.2;
-double publishes = 27;
 //Get driving info and publish to fanboatLL
 void angularPositionPID::angle_callback(const lab2::angle_msg::ConstPtr& am)
 {

@@ -68,24 +68,24 @@ void arbitrator::angle_joy_callback(const lab2::angle_msg::ConstPtr& ang)
 	if(on && arb_value == 0) {
 		if(up == true){
 			msg.angle = 0.0;
-			msg.thrust = .3;
+			msg.thrust = .2;
 			//ROS_INFO("UP");
 		}
 		else if(down == true){
 			msg.angle = 180.0;
-			msg.thrust = .3;
+			msg.thrust = .2;
 			//ROS_INFO("DOWN");
 
 		}
 		else if(left == true){
 			msg.angle = -90.0;
-			msg.thrust = .3;
+			msg.thrust = .2;
 			//ROS_INFO("LEFT");
 
 		}
 		else if(right == true){
 			msg.angle = 90.0;
-			msg.thrust = .3;
+			msg.thrust = .2;
 			//ROS_INFO("RIGHT");
 
 		}
