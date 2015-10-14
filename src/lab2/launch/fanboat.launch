@@ -1,6 +1,6 @@
 <launch>
 
-	       <node pkg="fanboat_ll" name="serial" output="screen" type="fanboat_serial.py"/>
+	       <node pkg="fanboat_ll" name="serial" type="fanboat_serial.py"/>
 	       <node pkg="joy" name="joystick" output="screen" type="joy_node"/>
 	       <node pkg="lab2" name="joy_constant" output="screen" type="joy_constant"/>
 	       <node pkg="lab2" name="joyAngleIntegrater" output="screen" type="joyAngleIntegrater"/>

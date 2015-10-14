@@ -57,7 +57,7 @@ void IRRangeFinderFilter::fanboatLL_callback(const fanboat_ll::fanboatLL::ConstP
 	fll = *f_ll;
 	left = filter(fll.a0, &leftq);
 	right = filter(fll.a1, &rightq);
-	ROS_INFO("a0 = %d, left = %f, a1 = %d, right = %f",fll.a0,left,fll.a1,right);
+	//ROS_INFO("a0 = %d, left = %f, a1 = %d, right = %f",fll.a0,left,fll.a1,right);
 }
 
 int main(int argc, char** argv)
