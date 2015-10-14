@@ -69,6 +69,8 @@ void sensorFilter::fanboatLL_callback(const fanboat_ll::fanboatLL::ConstPtr& f_l
 			ROS_INFO("offset = %f ", offset);
 		}
 
+	offset += .069;
+	offset = (offset > 180) ? offset-360 : (offset <= -180)? offset + 360 : offset;
 	yaw += offset; //Center it so the initial yaw is 0, and all other angles are relative;
 	yaw = (yaw > 180) ? yaw-360 : (yaw <= -180)? yaw + 360 : yaw; //(-180,180]
 
