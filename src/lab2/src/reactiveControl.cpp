@@ -16,9 +16,9 @@ private:
 
 	ros::NodeHandle nh_;
 
-	ros::Publisher motors_pub_;
+	ros::Publisher angles_pub_;
 
-	ros::Subscriber fanboatLL_sub_;
+	ros::Subscriber sensors_sub_;
 	
 };
 
@@ -29,10 +29,11 @@ double leftScale;
 reactiveControl::reactiveControl()
 {
 	//Subscribe to arbitated angle messages
-	fanboatLL_sub_ =  nh_.subscribe<fanboat_ll::fanboatLL>("sensors", 1, &reactiveControl::fanboatLL_callback, this);
+	sensors_sub_ = nh_.subscribe<fanboat_ll::fanboatLL>("sensors", 1, &reactiveControl::fanboatLL_callback, this);
 
-	//Publish to motors topic
-	motors_pub_ = nh_.advertise<fanboat_ll::fanboatMotors>("motors", 1);
+
+	//Publish to angles topic
+	angles_pub_ = nh_.advertise<lab2::angle_msg>("angle_rc", 1);
 
 }
 
@@ -40,7 +41,7 @@ reactiveControl::reactiveControl()
 fanboat_ll::fanboatLL fll;
 uint16_t initLeftS = -100;
 uint16_t initRightS = -100;
-double left,right;
+double angle, thrust;
 double init = -1000;
 
 //pulled from the arduino library.
@@ -51,10 +52,10 @@ double map(double x, double in_min, double in_max, double out_min, double out_ma
 
 void reactive(int leftSensor, int rightSensor)
 {
-	right = .0;
-	left = .0;
+	//right = .0;
+	//left = .0;
 
-	//ROS_INFO("leftS = %d rightS = %d",leftSensor,rightSensor);
+	ROS_INFO("leftS = %d rightS = %d",leftSensor,rightSensor);
 }
 
 
@@ -62,7 +63,7 @@ void reactive(int leftSensor, int rightSensor)
 //Get feedback from fanboat
 void reactiveControl::fanboatLL_callback(const fanboat_ll::fanboatLL::ConstPtr& f_ll)
 {
-	fanboat_ll::fanboatMotors boat;
+	lab2::angle_msg msg;
 	uint16_t leftS;
 	uint16_t rightS;
 	leftS = fll.a0;
@@ -74,8 +75,8 @@ void reactiveControl::fanboatLL_callback(const fanboat_ll::fanboatLL::ConstPtr& 
 		initRightS = rightS;
 	}
 	reactive(leftS,rightS);
-	boat.right = right;
-	boat.left = left;
+	msg.angle = 0.0;
+	msg.thrust = .3;
 	//motors_pub_.publish(boat);
 }
 
