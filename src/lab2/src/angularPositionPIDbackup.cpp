@@ -97,13 +97,74 @@ double publishes = 27;
 void angularPositionPID::angle_callback(const lab2::angle_msg::ConstPtr& am)
 {
 	fanboat_ll::fanboatMotors boat;
-	left = am->thrust;
-	right = am->thrust;
+	if(state == 0){
+		left = turn;
+		right = turn;
+		double target = 120;
+		anglepid(target);
+		if(previousDiff < 15){
+			state = 1;
+		}
+		count = 0;
+	} else if (state == 1) {
+		left = straight;
+		right = straight;
+		double target =  120;
+		anglepid(target);
+		if(count < publishes){
+			count++;
+		} else {
+			state = 2;
+		}
+	} else if (state == 2) {
+		left = turn;
+		right = turn;
+		double target = -120;
+		anglepid(target);
+		if(previousDiff < 15){
+			state = 3;
+		}
+		count = 0;
+	} else if (state == 3) {
+		left = straight;
+		right = straight;
+		double target =  -120;
+		anglepid(target);
+		if(count < publishes){
+			count++;
+		} else {
+			state = 4;
+		}
+	} else if (state == 4) {
+		left = turn;
+		right = turn;
+		double target = 0;
+		anglepid(target);
+		if(previousDiff < 15){
+			state = 5;
+		}
+		count = 0;
+	} else if (state == 5) {
+		left = straight;
+		right = straight;
+		double target =  0;
+		anglepid(target);
+		if(count < publishes){
+			count++;
+		} else {
+			state = -1;
+		}
+	} else if (state == -1) {
+		left = 0;
+		right = 0;
+	}
 
-	anglepid(am->angle);
+	ROS_INFO("State %d: yaw = %f, previousDiff = %f", state, fll.yaw, previousDiff);
 
 	boat.left = left;
 	boat.right = right;
+
+	//TODO: Call a function to do PID stuff here
 
 	motors_pub_.publish(boat);
 }
