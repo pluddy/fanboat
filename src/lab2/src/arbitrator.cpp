@@ -111,6 +111,7 @@ void arbitrator::angle_tri_callback(const lab2::angle_msg::ConstPtr& ang)
 //If this topic should be forwarded, forward it
 void arbitrator::angle_rc_callback(const lab2::angle_msg::ConstPtr& ang)
 { 
+	//if(joy->buttons[lb_]) on = !on;
 	lab2::angle_msg msg;
 	msg.angle = ang->angle;
 	msg.thrust = ang->thrust;

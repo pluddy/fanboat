@@ -25,6 +25,11 @@ IRRangeFinderFilter::IRRangeFinderFilter()
 	//Subscribe to arbitated angle messages
 	fanboatLL_sub_ =  nh_.subscribe<fanboat_ll::fanboatLL>("fanboatLL", 1, &IRRangeFinderFilter::fanboatLL_callback, this);
 
+
+	sensors_pub_ = nh_.advertise<lab2::sensor_msg>("motors", 1);
+
+
+
 }
 
 //Variables
@@ -57,7 +62,8 @@ void IRRangeFinderFilter::fanboatLL_callback(const fanboat_ll::fanboatLL::ConstP
 	fll = *f_ll;
 	left = filter(fll.a0, &leftq);
 	right = filter(fll.a1, &rightq);
-	//ROS_INFO("a0 = %d, left = %f, a1 = %d, right = %f",fll.a0,left,fll.a1,right);
+
+	ROS_INFO("a0 = %d, left = %f, a1 = %d, right = %f",fll.a0,left,fll.a1,right);
 }
 
 int main(int argc, char** argv)
