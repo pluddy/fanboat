@@ -111,6 +111,9 @@ void anglepid(double target)
 	}
 
 	ROS_INFO("left = %f right = %f", left, right);
+	ROS_INFO(" ");
+	ROS_INFO(" ");
+	ROS_INFO(" ");
 }
 
 //Get driving info and publish to fanboatLL

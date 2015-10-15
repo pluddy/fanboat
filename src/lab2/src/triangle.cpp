@@ -58,7 +58,7 @@ int main(int argc, char** argv)
     			targetAngle += 120;
     			targetAngle = (targetAngle > 180) ? targetAngle - 360 : targetAngle; //Make sure this value stays within [-180,180]
     		}
-    		ROS_INFO("Turning - Target: %f, Actual: %f", targetAngle, actualAngle);
+    		//ROS_INFO("Turning - Target: %f, Actual: %f", targetAngle, actualAngle);
     		angle = targetAngle;
     		thrust = 0.2;
     	} else {

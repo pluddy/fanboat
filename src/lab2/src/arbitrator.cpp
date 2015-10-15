@@ -64,7 +64,24 @@ void arbitrator::angle_joy_callback(const lab2::angle_msg::ConstPtr& ang)
 	lab2::angle_msg msg;
 	msg.angle = ang->angle;
 	msg.thrust = ang->thrust;
-	
+	// if(arb_value == 0){
+	// 	ROS_INFO("JOY");
+	// 	ROS_INFO("JOY");
+	// 	ROS_INFO("JOY");
+	// }
+	// else if(arb_value == 1){
+	// 	ROS_INFO("triangle");
+	// 	ROS_INFO("triangle");
+	// 	ROS_INFO("triangle");
+	// }
+	// else if(arb_value == 2){
+	// 	ROS_INFO("REACTIVE");
+	// 	ROS_INFO("REACTIVE");
+	// 	ROS_INFO("REACTIVE");
+	// }
+
+
+
 	if(on && arb_value == 0) {
 		if(up == true){
 			msg.angle = 0.0;
