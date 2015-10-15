@@ -80,7 +80,7 @@ void anglepid(double target)
 	double I = iValue;
 
 	//Calculate P factor
-	double pFactor = P*diff;
+	//double pFactor = P*diff;
 
 	//Calculate D factor
 	double error = diff - previousDiff;
@@ -88,23 +88,25 @@ void anglepid(double target)
 	double dFactor = D*error;
 
 	//Calculate I factor
-	double integral = previousIntegral + diff;
-	integral = (integral * I > iMax) ? iMax / I : (integral * I < -iMax) ? -iMax / I : integral; //Cap the integral value (both + and -)
-	if(fabs(diff) < 3 || fabs(diff) > 50) { //Behaves funny when diff is too large (around 180 degrees), and should have no effect if diff is good enough.
-		integral = 0;
-	}
-	double iFactor = I*integral;
-	previousIntegral = integral;
+	//double integral = previousIntegral + diff;
+	//integral = (integral * I > iMax) ? iMax / I : (integral * I < -iMax) ? -iMax / I : integral; //Cap the integral value (both + and -)
+	//if(fabs(diff) < 3 || fabs(diff) > 50) { //Behaves funny when diff is too large (around 180 degrees), and should have no effect if diff is good enough.
+	//	integral = 0;
+	//}
+	//double iFactor = I*integral;
+	//previousIntegral = integral;
 
-	ROS_INFO("pFactor = %f dFactor = %f iFactor = %f", pFactor, dFactor, iFactor);
+	//ROS_INFO("pFactor = %f dFactor = %f iFactor = %f", pFactor, dFactor, iFactor);
 	if(diff > 0) {
-		left = pFactor + dFactor + iFactor;
+	//	left = pFactor + dFactor + iFactor;
+		left = P*diff + dFactor;
 		if(left > 1) left=1;
 		left = map(left, 0.0,1.0,.45,.7);
 		left = left * leftScale;
 		
 	} else {
-		right = -pFactor - dFactor - iFactor;
+	//	right = -pFactor - dFactor - iFactor;
+		right = P*(-1*diff) - dFactor;
 		if(right > 1) right=1;
 		right = map(right, 0.0,1.0,.3,.5);
 		right = right * rightScale;
