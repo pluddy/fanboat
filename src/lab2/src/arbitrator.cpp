@@ -16,13 +16,16 @@ private:
 	void angle_joy_callback(const lab2::angle_msg::ConstPtr& ang);
 	void angle_tri_callback(const lab2::angle_msg::ConstPtr& ang);
 	void angle_rc_callback(const lab2::angle_msg::ConstPtr& ang);
+	void angle_map_callback(const lab2::angle_msg::ConstPtr& ang);
+
 
 	ros::NodeHandle nh_;
-	int lb_, a_button_, b_button_, y_button_, up_d_pad_, down_d_pad_, left_d_pad_, right_d_pad_, left_joy_button_;
+	int lb_, a_button_, b_button_, x_button_, y_button_, up_d_pad_, down_d_pad_, left_d_pad_, right_d_pad_, left_joy_button_;
 
 	ros::Publisher arb_pub;
 	ros::Subscriber angle_joy_sub_;
 	ros::Subscriber angle_tri_sub_;
+	ros::Subscriber angle_map_sub_;
 	ros::Subscriber angle_rc_sub_;
 	ros::Subscriber joy_sub_;
 };
@@ -31,6 +34,7 @@ private:
 arbitrator::arbitrator():
 	a_button_(0), //joystick
 	b_button_(1), //rc
+	x_button_(2), //mapping
 	y_button_(3), //triangle
 	lb_(4),    //on
 	up_d_pad_(13), //set angle to 0deg
@@ -45,6 +49,7 @@ arbitrator::arbitrator():
 
 	//Subscribe to topics to arbitrate between
 		angle_joy_sub_ = nh_.subscribe<lab2::angle_msg>("angle_joy", 1, &arbitrator::angle_joy_callback, this);
+		angle_map_sub_ = nh_.subscribe<lab2::angle_msg>("angle_map", 1, &arbitrator::angle_map_callback, this);
 		angle_tri_sub_ = nh_.subscribe<lab2::angle_msg>("angle_tri", 1, &arbitrator::angle_tri_callback, this);
 		angle_rc_sub_ = nh_.subscribe<lab2::angle_msg>("angle_rc", 1, &arbitrator::angle_rc_callback, this);
 
@@ -126,6 +131,18 @@ void arbitrator::angle_tri_callback(const lab2::angle_msg::ConstPtr& ang)
 }
 
 //If this topic should be forwarded, forward it
+void arbitrator::angle_map_callback(const lab2::angle_msg::ConstPtr& ang)
+{ 
+	lab2::angle_msg msg;
+	msg.angle = ang->angle;
+	msg.thrust = ang->thrust;
+	if(on && arb_value == 3) {
+		arb_pub.publish(msg);
+		ROS_INFO("publishing maps");
+	}
+}
+
+//If this topic should be forwarded, forward it
 void arbitrator::angle_rc_callback(const lab2::angle_msg::ConstPtr& ang)
 { 
 	//if(joy->buttons[lb_]) on = !on;
@@ -150,6 +167,8 @@ void arbitrator::joy_callback(const sensor_msgs::Joy::ConstPtr& joy)
 		arb_value = 2;
 	} else if(joy->buttons[y_button_]) { //Y is triangle
 		arb_value = 1;
+	}else if(joy->buttons[x_button_]) { //X is mapping, the real important stuff
+		arb_value = 3;
 	}
 
 	if(arb_value == 0){

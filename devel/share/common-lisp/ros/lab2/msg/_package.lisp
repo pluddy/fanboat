@@ -3,5 +3,7 @@
   (:export
    "<ANGLE_MSG>"
    "ANGLE_MSG"
+   "<SENSOR_MSG>"
+   "SENSOR_MSG"
   ))
 

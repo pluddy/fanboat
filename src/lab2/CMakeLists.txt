@@ -189,3 +189,7 @@ add_dependencies(reactiveControl lab2_generate_message_cpp)
 add_executable(triangle src/triangle.cpp)
 target_link_libraries (triangle ${catkin_LIBRARIES})
 add_dependencies(triangle lab2_generate_message_cpp)
+
+add_executable(mapping src/mapping.cpp)
+target_link_libraries (mapping ${catkin_LIBRARIES})
+add_dependencies(mapping lab2_generate_message_cpp)

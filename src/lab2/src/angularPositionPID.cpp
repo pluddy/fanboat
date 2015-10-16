@@ -108,7 +108,7 @@ void anglepid(double target)
 	//	right = -pFactor - dFactor - iFactor;
 		right = P*(-1*diff) - dFactor;
 		if(right > 1) right=1;
-		right = map(right, 0.0,1.0,.3,.5);
+		right = map(right, 0.0,1.0,.35,.55);
 		right = right * rightScale;
 	}
 
