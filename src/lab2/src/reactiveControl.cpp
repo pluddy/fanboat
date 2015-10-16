@@ -74,6 +74,8 @@ bool leftInRange(){
 double lastYaw = 0;
 bool isMapping = true;
 double yawClose = -1000;
+double yawFar = 1000;
+double sensorFar = 1000;
 double sensorClose = -1000;
 double totalTurn = 0;
 
@@ -91,7 +93,12 @@ void reactive()
 		angle = currentA - 30;
 
 		//Keep track of how far we've turned
-		totalTurn += (int)(currentA - lastYaw + 360) % 360; //THIS IS VERY VERY WRONG
+		if (fabs(currentA) > fabs(lastYaw)){
+			totalTurn += (fabs(currentA) - fabs(lastYaw)); //THIS IS VERY VERY WRONG
+		}
+		else if(fabs(lastYaw) > fabs(currentA)){
+			totalTurn += (fabs(lastYaw) - fabs(currentA));
+		}
 		lastYaw = currentA;
 
 		//Check if there is a closer object now
@@ -103,11 +110,18 @@ void reactive()
 			sensorClose = rightS;
 			yawClose = currentA;
 		}
-
-		//Return to following
-		if(fabs(totalTurn) > 360) {
-			isMapping = false;
+		if(leftS < sensorFar) {
+			sensorFar = leftS;
+			yawFar = currentA;
 		}
+		if(rightS < sensorFar) {
+			sensorFar = rightS;
+			yawFar = currentA;
+		}
+		//Return to following
+		// if(fabs(totalTurn) > 360) {
+		// 	isMapping = false;
+		// }
 
 		ROS_INFO("Total turn: %f", totalTurn);
 
@@ -121,7 +135,7 @@ void reactive()
 			totalTurn = 0;
 
 			//Start turning
-			angle = currentA - 30;
+			angle = currentA - 50;
 			thrust = 0.2;
 		}
 		//both in range go straight
