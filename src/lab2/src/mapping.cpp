@@ -266,9 +266,11 @@ void mapping::sensorFilter_callback(const fanboat_ll::fanboatLL::ConstPtr& f_ll)
 		doMapping();
 		ROS_INFO("MAPPING");
 	} else if (state == 1){
+		angle = yawClose;
 		turn(yawClose);
 		ROS_INFO("TURN CLOSE");
 	} else if (state == 2){
+		angle = yawFar;
 		turn(yawFar);
 		ROS_INFO("TURN FAR");
 	} else if (state == 3){
@@ -278,6 +280,7 @@ void mapping::sensorFilter_callback(const fanboat_ll::fanboatLL::ConstPtr& f_ll)
 
 	boat.angle = angle;
 	boat.thrust = thrust;
+	ROS_INFO("angle: %f", angle);
 	angles_pub_.publish(boat);
 }
 
