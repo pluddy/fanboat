@@ -10,7 +10,7 @@ class reactiveControl
 public:
 	reactiveControl();
 	ros::Publisher angles_pub_;
-	
+
 	//Private functions/variables
 private:
 	//void angle_callback(const lab2::angle_msg::ConstPtr& ang);
@@ -22,7 +22,7 @@ private:
 	ros::Subscriber joy_sub_;
 
 	ros::Subscriber sensors_sub_;
-	
+
 };
 
 double pValue;
@@ -30,14 +30,14 @@ double dValue;
 double rightScale;
 double leftScale;
 reactiveControl::reactiveControl():
-right_joy_button_(10) //reset the diff
+				right_joy_button_(10) //reset the diff
 {
-//Subscribe to arbitated angle messages
+	//Subscribe to arbitated angle messages
 	sensors_sub_ = nh_.subscribe<fanboat_ll::fanboatLL>("sensors", 1, &reactiveControl::sensorFilter_callback, this);
 
 	joy_sub_ =  nh_.subscribe<sensor_msgs::Joy>("joy", 1, &reactiveControl::joy_callback, this);
 
-//Publish to angles topic
+	//Publish to angles topic
 	angles_pub_ = nh_.advertise<lab2::angle_msg>("angle_rc", 1);
 
 }
@@ -49,7 +49,6 @@ double initLeftS = -100;
 double initRightS = -100;
 double init = -1000;
 double leftS, rightS, rightMotor, leftMotor, angle, thrust, diffL, diffR;
-bool isMapping = false;
 bool isForward = true;
 
 //pulled from the arduino library.
@@ -72,6 +71,12 @@ bool leftInRange(){
 	return false;
 }
 
+double lastYaw = 0;
+bool isMapping = true;
+double yawClose = -1000;
+double sensorClose = -1000;
+double totalTurn = 0;
+
 void reactive()
 {
 	diffL = initLeftS - leftS;
@@ -79,59 +84,113 @@ void reactive()
 	double currentA = fll.yaw;
 	double thrustDiff = .02;
 	thrust = 0.2;
-	if(leftS < 200 && rightS < 200) {
+	ROS_INFO("isMapping: %d", isMapping);
+	if(1) {
+		//Keep turning slowly
 		thrust = 0.2;
-		angle = currentA;
-	}
-	//both in range go straight
-	else if(rightInRange() && leftInRange()){
-		thrust = .2;
-		angle = currentA;
-	}
-	//when both below -50 slow down
-	else if(diffR <= 0 && diffL <= 0){
-		thrust = 0.2;
-		angle = currentA;
-	}
-	//when dif r > 50 and l is in range l slow down 
-	else if(leftInRange() && diffR >= rangeAllowance){
-		angle = currentA - 20;
-	}
-	//when dif l > 50 and r is in range r slow down
-	else if(rightInRange() && diffL >= rangeAllowance){
-		angle = currentA + 20;
-	}
-	//when diff l < -50 and r is in range l slow down
-	else if(rightInRange() && diffL <= -rangeAllowance){
-		angle = currentA - 20;
-	}
-	//when diff r < -50 and l is in range r slow down
-	else if(leftInRange() && diffR <= -rangeAllowance){
-		angle = currentA + 20;
-	}
-	else if(diffL <=-rangeAllowance && diffR >= rangeAllowance){
-		angle = currentA - 40;
-	}
-	else if(diffL >= rangeAllowance && diffR <= -rangeAllowance){
-		angle = currentA + 40;
-	}
-	//when both above 50 speed up
-	else if(diffR >= rangeAllowance && diffL >= rangeAllowance){
-		angle = currentA;
-		thrust = .35;
-	}
-	else{
-		ROS_INFO("NO STATE HIT");
-		ROS_INFO("NO STATE HIT");
-		ROS_INFO("NO STATE HIT");
-		ROS_INFO("NO STATE HIT");
-		ROS_INFO("NO STATE HIT");
+		angle = currentA - 30;
+
+		//Keep track of how far we've turned
+		totalTurn += (int)(currentA - lastYaw + 360) % 360; //THIS IS VERY VERY WRONG
+		lastYaw = currentA;
+
+		//Check if there is a closer object now
+		if(leftS > sensorClose) {
+			sensorClose = leftS;
+			yawClose = currentA;
+		}
+		if(rightS > sensorClose) {
+			sensorClose = rightS;
+			yawClose = currentA;
+		}
+
+		//Return to following
+		if(fabs(totalTurn) > 360) {
+			isMapping = false;
+		}
+
+		ROS_INFO("Total turn: %f", totalTurn);
+
+	} else {
+		//lost
+		if(leftS < 150 && rightS < 150) {
+			//Start mapping for a new object - we're lost!!!
+			yawClose = -1000;
+			isMapping = true;
+			lastYaw = currentA;
+			totalTurn = 0;
+
+			//Start turning
+			angle = currentA - 30;
+			thrust = 0.2;
+		}
+		//both in range go straight
+		else if(rightInRange() && leftInRange()){
+			thrust = .2;
+			angle = currentA;
+			ROS_INFO("Content!");
+
+		}
+		//when both below -50 slow down
+		else if(diffR <= 0 && diffL <= 0){
+			thrust = 0.2;
+			angle = currentA;
+			ROS_INFO("Too close!!");
+
+		}
+		//when dif r > 50 and l is in range l slow down
+		else if(leftInRange() && diffR >= rangeAllowance){
+			angle = currentA - 25;
+			ROS_INFO("Right too far!");
+
+		}
+		//when dif l > 50 and r is in range r slow down
+		else if(rightInRange() && diffL >= rangeAllowance){
+			angle = currentA + 25;
+			ROS_INFO("Left too far!");
+
+		}
+		//when diff l < -50 and r is in range l slow down
+		else if(rightInRange() && diffL <= -rangeAllowance){
+			angle = currentA - 25;
+			ROS_INFO("Left too close!");
+
+		}
+		//when diff r < -50 and l is in range r slow down
+		else if(leftInRange() && diffR <= -rangeAllowance){
+			angle = currentA + 25;
+			ROS_INFO("Right too close!");
+
+		}
+		else if(diffL <=-rangeAllowance && diffR >= rangeAllowance){
+			angle = currentA - 40;
+			ROS_INFO("Craziness 1!");
+
+		}
+		else if(diffL >= rangeAllowance && diffR <= -rangeAllowance){
+			angle = currentA + 40;
+			ROS_INFO("Craziness 2!");
+
+		}
+		//when both above 50 speed up
+		else if(diffR >= rangeAllowance && diffL >= rangeAllowance){
+			angle = currentA;
+			thrust = .45;
+			ROS_INFO("Straight");
+		}
+		else{
+			ROS_INFO("NO STATE HIT");
+			ROS_INFO("NO STATE HIT");
+			ROS_INFO("NO STATE HIT");
+			ROS_INFO("NO STATE HIT");
+			ROS_INFO("NO STATE HIT");
+		}
 	}
 
-	if(thrust < .25) thrust = .25;
+	if(thrust < .2) thrust = .2;
 	if(thrust > .5) thrust = .5;
 
-	ROS_INFO("diffL = %lf diffR = %lf angle = %lf thrust = %lf", diffL, diffR, angle,thrust);
+	ROS_INFO("dL = %.0lf dR = %.0lf ang = %.0lf thrust = %.2lf lS = %.0lf lR = %.0lf", diffL, diffR, angle,thrust,leftS, rightS);
 	//ROS_INFO("leftS = %f, rightS = %f", leftS, rightS);
 }
 
@@ -152,7 +211,7 @@ void reactiveControl::sensorFilter_callback(const fanboat_ll::fanboatLL::ConstPt
 	fll = *f_ll;
 	lab2::angle_msg boat;
 
-//ROS_INFO("reactiveControl");
+	//ROS_INFO("reactiveControl");
 	leftS = fll.a0;
 	rightS = fll.a1;
 	if (initLeftS == -100){
