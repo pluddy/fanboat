@@ -74,7 +74,7 @@ LandmarkDetector::LandmarkDetector()
 GrayImage cvToGrayImage(cv::Mat img){
   //Use opencv to conver to gray
   cv::Mat grayImg;
-  cv::cvtColor(img,grayImg,CV_RGB2GRAY);  
+  cv::cvtColor(img,grayImg,CV_RGB2GRAY);
   //Create a gray mcimg of the correct size
   //fprintf(stderr,"cols: %d, rows: %d\n",grayImg.cols,grayImg.rows);
   GrayImage retImg = newGrayImage(grayImg.cols,grayImg.rows);
@@ -84,7 +84,7 @@ GrayImage cvToGrayImage(cv::Mat img){
       imRef(retImg,j,i) = grayImg.at<uchar>(i,j);
     }
   }
-        
+          
   return retImg;
 }
 
@@ -117,7 +117,7 @@ void LandmarkDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
 
   //Get the mcimg formated image
   im1 = cvToGrayImage(colorImg);
-  lamarr = landmarkParams(im1, NULL, //"out.match.ppm", 
+  lamarr = landmarkParams(im1, NULL, //"out.match.ppm",
                           verbose, drawX,
                           window, peakw, threshold,
                           factor, spacing, skip, ycoord);
@@ -144,7 +144,7 @@ void LandmarkDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
     landmarkLoc.ybottom = lam.ybottom;
     landmarkLoc.code = lam.code;
     //Compute the distance
-    landmarkLoc.height = sqrt((lam.xtop-lam.xbottom)*(lam.xtop-lam.xbottom) 
+    landmarkLoc.height = sqrt((lam.xtop-lam.xbottom)*(lam.xtop-lam.xbottom)
                               +(lam.ytop-lam.ybottom)*(lam.ytop-lam.ybottom) );
     ROS_INFO("Height: %f", landmarkLoc.height);
     //Publish it
