@@ -9,6 +9,7 @@ int32 ybottom
 # Height of the landmark as computed as the distance between the top
 # and bottom points.
 float64 height
+float64 distance
 
 # The landmark code id number which should can range from 0 to 255.  If
 # this is -1 then it means the code was not correctly read (and the

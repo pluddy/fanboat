@@ -257,7 +257,8 @@ void BallDetector::updateLowThreshold(const geometry_msgs::Vector3::ConstPtr& th
   nh.setParam("thresh/high/v",v);
 }
 
-
+float movingDistanceWindow[5];
+int movingIndex = 0;
 void BallDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
   static cv_bridge::CvImageConstPtr cv_const_ptr;
 
@@ -488,12 +489,20 @@ void BallDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
     circ.header.stamp = ros::Time::now();
     //Use the average of the height and width as the radius
     double radius = (rect.height/2.0 + rect.width/2.0)/2.0;
+    movingDistanceWindow[movingIndex] = radius;
+    movingIndex = (movingIndex + 1) % 5;
+    double distanceTotal = 0;
+    for (int i = 0; i < 5; i++){
+	distanceTotal += movingDistanceWindow[i];
+    }
+    double distance = (40/(distanceTotal/5))*100;
     circ.imageWidth = colorImg.cols;
     circ.imageHeight = colorImg.rows;
     //Make it relative to the center of the image
     circ.x = rect.x + radius - threshImg.cols/2;
     circ.y = -1*(rect.y + radius - threshImg.rows/2);
     circ.radius = radius;
+    circ.distance = distance;
     circle_pub_.publish(circ);
 #ifdef BALLDETECTOR_DEBUG
     if(debugLevel.sendDebugImages){

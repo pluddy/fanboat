@@ -107,16 +107,20 @@ include_directories(
 
 ## Declare a cpp executable
 add_executable(landmarkDetector src/landmarkDetector.cpp src/barcode.c src/digits.c src/landmark.c src/mcimg.c src/findlines.c)
+add_executable(landmarkServo src/landmarkServo.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 add_dependencies(landmarkDetector landmark_self_sim_generate_messages_cpp)
+add_dependencies(landmarkServo landmark_self_sim_generate_messages_cpp)
+add_dependencies(landmarkServo lab2_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(landmark_self_sim_node
 #   ${catkin_LIBRARIES}
 # )
 target_link_libraries (landmarkDetector ${OpenCV_LIBRARIES} ${catkin_LIBRARIES} )
+target_link_libraries (landmarkServo ${catkin_LIBRARIES} )
 
 #############
 ## Install ##

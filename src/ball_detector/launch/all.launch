@@ -16,6 +16,7 @@
   <node name="ball_detector_node" pkg="ball_detector" respawn="true" type="ball_detector_node" output="screen" />
   <node name="ballDetectorConfig" pkg="ball_detector" type="configGUI.py" />
   <include file="$(find ball_detector)/launch/displayDebugImages.launch" />
-  <node name="landmarkDetector" pkg="landmark_self_sim" respawn="true" type="landmarkDetector" output="screen" />  
+  <node name="landmarkDetector" pkg="landmark_self_sim" respawn="true" type="landmarkDetector" output="screen" />
+  <node name="landmarkServo" pkg="landmark_self_sim" respawn="true" type="landmarkServo" output="screen" />  
 
 </launch>

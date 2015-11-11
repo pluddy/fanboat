@@ -8,3 +8,5 @@ float64 x
 float64 y
 #The radius of the detected ball
 float64 radius
+#The distance from the ball
+float64 distance
