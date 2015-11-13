@@ -134,6 +134,9 @@ void LandmarkDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
     landm lam = lamarr.lm[i];
     ROS_INFO("Landmark @ %3d,%3d to %d,%d - code = %d\n",
              lam.xtop, lam.ytop, lam.xbottom, lam.ybottom, lam.code);
+    double height =  sqrt((lam.xtop-lam.xbottom)*(lam.xtop-lam.xbottom) 
+                              +(lam.ytop-lam.ybottom)*(lam.ytop-lam.ybottom) );
+    double distance = (180/height) * 100;
 
     landmark_self_sim::landmarkLocation landmarkLoc;
     landmarkLoc.header.stamp = ros::Time::now();
@@ -144,9 +147,11 @@ void LandmarkDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
     landmarkLoc.ybottom = lam.ybottom;
     landmarkLoc.code = lam.code;
     //Compute the distance
-    landmarkLoc.height = sqrt((lam.xtop-lam.xbottom)*(lam.xtop-lam.xbottom)
-                              +(lam.ytop-lam.ybottom)*(lam.ytop-lam.ybottom) );
+    landmarkLoc.height = height;
+    landmarkLoc.distance = distance;
+    ROS_INFO("top: x: %d, y: %d  bottom: x: %d, y: %d", lam.xtop,lam.ytop,lam.xbottom,lam.ybottom);
     ROS_INFO("Height: %f", landmarkLoc.height);
+    ROS_INFO("Distance: %f", landmarkLoc.distance);
     //Publish it
     landmark_pub_.publish(landmarkLoc);
 
