@@ -67,8 +67,13 @@ set(ball_detector_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
+<<<<<<< HEAD
   set(ball_detector_SOURCE_PREFIX /home/odroid/catkin_ws/src/fanboat/src/ball_detector)
   set(ball_detector_DEVEL_PREFIX /home/odroid/catkin_ws/src/fanboat/devel)
+=======
+  set(ball_detector_SOURCE_PREFIX /home/viki/catkin_ws/src/fanboat/src/ball_detector)
+  set(ball_detector_DEVEL_PREFIX /home/viki/catkin_ws/src/fanboat/devel)
+>>>>>>> 8f00e7774a103ee680e8144a155c28aad7a2b6cf
   set(ball_detector_INSTALL_PREFIX "")
   set(ball_detector_PREFIX ${ball_detector_DEVEL_PREFIX})
 else()
@@ -103,7 +108,11 @@ if(NOT "/home/odroid/catkin_ws/src/fanboat/devel/include " STREQUAL " ")
         message(FATAL_ERROR "Project 'ball_detector' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  Ask the maintainer 'indigo <indigo@todo.todo>' to fix it.")
       endif()
     else()
+<<<<<<< HEAD
       message(FATAL_ERROR "Project 'ball_detector' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/odroid/catkin_ws/src/fanboat/src/ball_detector/${idir}'.  Ask the maintainer 'indigo <indigo@todo.todo>' to fix it.")
+=======
+      message(FATAL_ERROR "Project 'ball_detector' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/viki/catkin_ws/src/fanboat/src/ball_detector/${idir}'.  Ask the maintainer 'indigo <indigo@todo.todo>' to fix it.")
+>>>>>>> 8f00e7774a103ee680e8144a155c28aad7a2b6cf
     endif()
     _list_append_unique(ball_detector_INCLUDE_DIRS ${include})
   endforeach()
@@ -122,7 +131,11 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
+<<<<<<< HEAD
     foreach(path /home/odroid/catkin_ws/src/fanboat/devel/lib;/home/odroid/catkin_ws/devel/lib;/opt/ros/indigo/lib)
+=======
+    foreach(path /home/viki/catkin_ws/src/fanboat/devel/lib;/home/viki/catkin_ws/src/fanboat/devel/lib;/home/viki/catkin_ws/devel/lib;/opt/ros/indigo/lib)
+>>>>>>> 8f00e7774a103ee680e8144a155c28aad7a2b6cf
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

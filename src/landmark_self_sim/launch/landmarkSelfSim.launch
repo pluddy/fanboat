@@ -8,9 +8,9 @@
     <param name="io_method" value="mmap"/>
   </node>
 
-  
+
   <node name="landmarkDetector" pkg="landmark_self_sim" type="landmarkDetector" output="screen">
-    <remap from="image" to="/usb_cam/image_raw"/>
+    <remap from="image" to="/usb_cam/image_raw_landmark"/>
   </node>
 
 </launch>

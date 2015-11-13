@@ -260,7 +260,11 @@ if __name__ == '__main__':
             sys.exit(1)
 
         # environment at generation time
+<<<<<<< HEAD
         CMAKE_PREFIX_PATH = '/home/odroid/catkin_ws/devel;/opt/ros/indigo'.split(';')
+=======
+        CMAKE_PREFIX_PATH = '/home/viki/catkin_ws/src/fanboat/devel;/home/viki/catkin_ws/devel;/home/viki/fanboat/devel;/opt/ros/indigo'.split(';')
+>>>>>>> 8f00e7774a103ee680e8144a155c28aad7a2b6cf
         # prepend current workspace if not already part of CPP
         base_path = os.path.dirname(__file__)
         if base_path not in CMAKE_PREFIX_PATH:
