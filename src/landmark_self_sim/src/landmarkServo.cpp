@@ -6,30 +6,30 @@
 #include <math.h>
 using namespace std;
 
-class LandmarkServo{
+class CameraServo{
 public:
-  LandmarkServo();
+  CameraServo();
 private:
-  void landmarkCallback(const landmark_self_sim::landmarkLocation::ConstPtr& msg);
+  void imgCallback(const landmark_self_sim::landmarkLocation::ConstPtr& msg);
 
   ros::NodeHandle nh;
 
   //Subscriber for landmark
-  ros::Subscriber landmark_sub_;
+  ros::Subscriber img_arb_sub_;
 
   //Publisher for angle
   ros::Publisher angle_pub_;
 };
 
-LandmarkServo::LandmarkServo()
+CameraServo::CameraServo()
 {
-  landmark_sub_ = nh.subscribe("landmarkLocation", 1, &LandmarkServo::landmarkCallback, this);
+  img_arb_sub_ = nh.subscribe("img_arb", 1, &CameraServo::imgCallback, this);
 
   //Landmark position publisher
-  angle_pub_ = nh.advertise<lab2::angle_msg>("servoAngle",1);
+  angle_pub_ = nh.advertise<lab2::angle_msg>("CameraServoAngle",1);
 }
 
-void LandmarkServo::landmarkCallback(const landmark_self_sim::landmarkLocation::ConstPtr& msg)
+void CameraServo::imgCallback(const lab3::ballLandInfo::ConstPtr& msg)
 {
 	int xtop = msg->xtop;
 	int ytop = msg->ytop;
@@ -44,14 +44,17 @@ void LandmarkServo::landmarkCallback(const landmark_self_sim::landmarkLocation::
 	int diffx = 300 - x;
   double diffang = (diffx/300.0) * 22.5;
 
-  ROS_INFO("angle: %f", diffang);
+	lab2::angle_msg ang;
+	ang.angle = diffang;
+	ang.thrust = 0.3;
+  angle_pub_.publish(ang);
 }
 
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "landmarkServo");
-  LandmarkServo ls;
+  ros::init(argc, argv, "CameraServo");
+  CameraServo ls;
   ros::spin();
   return 0;
 }
