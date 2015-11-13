@@ -67,50 +67,6 @@ visualArbitrator::visualArbitrator():
 
 
 
-//Variables to communicate left/right motor power and current/final yaw values
-//If this topic should be forwarded, forward it
-//If off or
-// void visualArbitrator::angle_joy_callback(const lab2::angle_msg::ConstPtr& ang)
-// {
-// 	lab2::angle_msg msg;
-// 	msg.angle = ang->angle;
-// 	msg.thrust = ang->thrust;
-//
-//
-// 	if(on && arb_value == 0) {
-// 		if(up == true){
-// 			msg.angle = 0.0;
-// 			msg.thrust = .2;
-// 			//ROS_INFO("UP");
-// 		}
-// 		else if(down == true){
-// 			msg.angle = 180.0;
-// 			msg.thrust = .2;
-// 			//ROS_INFO("DOWN");
-//
-// 		}
-// 		else if(left == true){
-// 			msg.angle = -90.0;
-// 			msg.thrust = .2;
-// 			//ROS_INFO("LEFT");
-//
-// 		}
-// 		else if(right == true){
-// 			msg.angle = 90.0;
-// 			msg.thrust = .2;
-// 			//ROS_INFO("RIGHT");
-//
-// 		}
-// 		arb_pub.publish(msg);
-// 	} else if(!on || arb_value < 0 || arb_value > 2) {
-// 		msg.angle = 0;
-// 		msg.thrust = 0;
-// 		//arb_pub.publish(msg);
-// 	}
-// }
-
-
-
 
 
 int main(int argc, char** argv)

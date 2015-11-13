@@ -8,6 +8,7 @@ find_package(catkin REQUIRED
   roscpp
   rospy
   std_msgs
+  image_transport
   message_generation
 )
 
