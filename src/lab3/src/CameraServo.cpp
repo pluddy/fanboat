@@ -1,6 +1,7 @@
 #include <ros/ros.h>
 #include <landmark_self_sim/landmarkLocation.h>
 #include <lab2/angle_msg.h>
+#include <lab3/ballLandInfo.h>
 #include <fanboat_ll/fanboatMotors.h>
 #include <fanboat_ll/fanboatLL.h>
 #include <math.h>
@@ -10,7 +11,7 @@ class CameraServo{
 public:
   CameraServo();
 private:
-  void imgCallback(const landmark_self_sim::landmarkLocation::ConstPtr& msg);
+  void msgCallback(const lab3::ballLandInfo::ConstPtr& msg);
 
   ros::NodeHandle nh;
 
@@ -23,23 +24,17 @@ private:
 
 CameraServo::CameraServo()
 {
-  img_arb_sub_ = nh.subscribe("img_arb", 1, &CameraServo::imgCallback, this);
+  img_arb_sub_ = nh.subscribe("ballLandInfo", 1, &CameraServo::msgCallback, this);
 
   //Landmark position publisher
   angle_pub_ = nh.advertise<lab2::angle_msg>("CameraServoAngle",1);
 }
 
-void CameraServo::imgCallback(const lab3::ballLandInfo::ConstPtr& msg)
+void CameraServo::msgCallback(const lab3::ballLandInfo::ConstPtr& msg)
 {
-	int xtop = msg->xtop;
-	int ytop = msg->ytop;
-	int xbottom = msg->xbottom;
-	int ybottom = msg->ybottom;
-  int height = msg->height;
-
-  int width = (11/8.5)*height;
-
-	int x = ((xtop + xbottom)/2) - width/2;
+	int x = msg->x;
+	int y = msg->y;
+	float distance = msg->distance;
 
 	int diffx = 300 - x;
   double diffang = (diffx/300.0) * 22.5;

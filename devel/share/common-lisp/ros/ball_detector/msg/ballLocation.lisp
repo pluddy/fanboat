@@ -36,6 +36,11 @@
     :reader radius
     :initarg :radius
     :type cl:float
+    :initform 0.0)
+   (distance
+    :reader distance
+    :initarg :distance
+    :type cl:float
     :initform 0.0))
 )
 
@@ -76,6 +81,11 @@
 (cl:defmethod radius-val ((m <ballLocation>))
   (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader ball_detector-msg:radius-val is deprecated.  Use ball_detector-msg:radius instead.")
   (radius m))
+
+(cl:ensure-generic-function 'distance-val :lambda-list '(m))
+(cl:defmethod distance-val ((m <ballLocation>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader ball_detector-msg:distance-val is deprecated.  Use ball_detector-msg:distance instead.")
+  (distance m))
 (cl:defmethod roslisp-msg-protocol:serialize ((msg <ballLocation>) ostream)
   "Serializes a message object of type '<ballLocation>"
   (roslisp-msg-protocol:serialize (cl:slot-value msg 'header) ostream)
@@ -106,6 +116,15 @@
     (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
   (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'radius))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 32) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 40) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
+  (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'distance))))
     (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
@@ -156,6 +175,16 @@
       (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
     (cl:setf (cl:slot-value msg 'radius) (roslisp-utils:decode-double-float-bits bits)))
+    (cl:let ((bits 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 32) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 40) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
+    (cl:setf (cl:slot-value msg 'distance) (roslisp-utils:decode-double-float-bits bits)))
   msg
 )
 (cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<ballLocation>)))
@@ -166,21 +195,22 @@
   "ball_detector/ballLocation")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<ballLocation>)))
   "Returns md5sum for a message object of type '<ballLocation>"
-  "046f798a75776068674c89e287314673")
+  "36109cf6193b8898954fb93e4e714a44")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'ballLocation)))
   "Returns md5sum for a message object of type 'ballLocation"
-  "046f798a75776068674c89e287314673")
+  "36109cf6193b8898954fb93e4e714a44")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<ballLocation>)))
   "Returns full string definition for message of type '<ballLocation>"
-  (cl:format cl:nil "Header header~%#The iamge width and height in pixels~%uint32 imageWidth~%uint32 imageHeight~%~%#The location of the ball center in x,y (width,height)~%float64 x~%float64 y~%#The radius of the detected ball~%float64 radius~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
+  (cl:format cl:nil "Header header~%#The iamge width and height in pixels~%uint32 imageWidth~%uint32 imageHeight~%~%#The location of the ball center in x,y (width,height)~%float64 x~%float64 y~%#The radius of the detected ball~%float64 radius~%#The distance from the ball~%float64 distance~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'ballLocation)))
   "Returns full string definition for message of type 'ballLocation"
-  (cl:format cl:nil "Header header~%#The iamge width and height in pixels~%uint32 imageWidth~%uint32 imageHeight~%~%#The location of the ball center in x,y (width,height)~%float64 x~%float64 y~%#The radius of the detected ball~%float64 radius~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
+  (cl:format cl:nil "Header header~%#The iamge width and height in pixels~%uint32 imageWidth~%uint32 imageHeight~%~%#The location of the ball center in x,y (width,height)~%float64 x~%float64 y~%#The radius of the detected ball~%float64 radius~%#The distance from the ball~%float64 distance~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <ballLocation>))
   (cl:+ 0
      (roslisp-msg-protocol:serialization-length (cl:slot-value msg 'header))
      4
      4
+     8
      8
      8
      8
@@ -194,4 +224,5 @@
     (cl:cons ':x (x msg))
     (cl:cons ':y (y msg))
     (cl:cons ':radius (radius msg))
+    (cl:cons ':distance (distance msg))
 ))

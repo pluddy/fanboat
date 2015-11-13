@@ -47,6 +47,8 @@ find_package(catkin REQUIRED
 ## Generate messages in the 'msg' folder
 add_message_files(
    FILES
+	ballLandInfo.msg
+	hasBall.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -158,6 +160,15 @@ catkin_package(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(visualArbitrator src/visualArbitrator.cpp)
-target_link_libraries (visualArbitrator ${catkin_LIBRARIES})
-add_dependencies(visualArbitrator lab3_generate_message_cpp)
+# add_executable(visualArbitrator src/visualArbitrator.cpp)
+# target_link_libraries (visualArbitrator ${catkin_LIBRARIES})
+# add_dependencies(visualArbitrator lab3_generate_message_cpp)
+
+add_executable(ballLandInfo src/ballLandInfo.cpp)
+target_link_libraries (ballLandInfo ${catkin_LIBRARIES})
+add_dependencies(ballLandInfo lab3_generate_message_cpp)
+
+add_executable(CameraServo src/CameraServo.cpp)
+target_link_libraries (CameraServo ${catkin_LIBRARIES})
+add_dependencies(CameraServo lab3_generate_message_cpp)
+add_dependencies(CameraServo lab2_generate_message_cpp)

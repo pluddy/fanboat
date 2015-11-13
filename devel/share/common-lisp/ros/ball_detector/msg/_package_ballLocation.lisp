@@ -11,4 +11,6 @@
           Y
           RADIUS-VAL
           RADIUS
+          DISTANCE-VAL
+          DISTANCE
 ))
