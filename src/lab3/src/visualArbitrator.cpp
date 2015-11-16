@@ -45,7 +45,17 @@ VisualArbitrator::VisualArbitrator()
 
 	bool lookForBall = true;
 	void VisualArbitrator::imageCb(const sensor_msgs::ImageConstPtr& msg){
+		ROS_INFO("Test %d", msg->height);
+		sensor_msgs::Image image;
+		image.header = msg->header;
+		image.height = msg->height;
+		image.width = msg->width;
+		image.encoding = msg->encoding;
+		image.is_bigendian = msg->is_bigendian;
+		image.step = msg->step;
+		image.data = msg->data;
 		if(lookForBall == true){
+
 			ball_img_pub_.publish(msg);
 		}
 		else{

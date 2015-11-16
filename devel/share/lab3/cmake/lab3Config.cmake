@@ -34,11 +34,7 @@ macro(_pack_libraries_with_build_configuration VAR)
   set(_index 0)
   while(${_index} LESS ${_count})
     list(GET _argn ${_index} lib)
-<<<<<<< HEAD
     if("${lib}" MATCHES "^(debug|optimized|general)$")
-=======
-    if("${lib}" MATCHES "^debug|optimized|general$")
->>>>>>> 8f00e7774a103ee680e8144a155c28aad7a2b6cf
       math(EXPR _index "${_index} + 1")
       if(${_index} EQUAL ${_count})
         message(FATAL_ERROR "_pack_libraries_with_build_configuration() the list of libraries '${ARGN}' ends with '${lib}' which is a build configuration keyword and must be followed by a library")
@@ -71,23 +67,14 @@ set(lab3_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-<<<<<<< HEAD
   set(lab3_SOURCE_PREFIX /home/odroid/catkin_ws/src/fanboat/src/lab3)
   set(lab3_DEVEL_PREFIX /home/odroid/catkin_ws/src/fanboat/devel)
-=======
-  set(lab3_SOURCE_PREFIX /home/viki/catkin_ws/src/fanboat/src/lab3)
-  set(lab3_DEVEL_PREFIX /home/viki/catkin_ws/src/fanboat/devel)
->>>>>>> 8f00e7774a103ee680e8144a155c28aad7a2b6cf
   set(lab3_INSTALL_PREFIX "")
   set(lab3_PREFIX ${lab3_DEVEL_PREFIX})
 else()
   set(lab3_SOURCE_PREFIX "")
   set(lab3_DEVEL_PREFIX "")
-<<<<<<< HEAD
   set(lab3_INSTALL_PREFIX /home/odroid/catkin_ws/src/fanboat/install)
-=======
-  set(lab3_INSTALL_PREFIX /home/viki/catkin_ws/src/fanboat/install)
->>>>>>> 8f00e7774a103ee680e8144a155c28aad7a2b6cf
   set(lab3_PREFIX ${lab3_INSTALL_PREFIX})
 endif()
 
@@ -104,7 +91,6 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(lab3_FOUND_CATKIN_PROJECT TRUE)
 
-<<<<<<< HEAD
 if(NOT "/home/odroid/catkin_ws/src/fanboat/devel/include " STREQUAL " ")
   set(lab3_INCLUDE_DIRS "")
   set(_include_dirs "/home/odroid/catkin_ws/src/fanboat/devel/include")
@@ -112,25 +98,12 @@ if(NOT "/home/odroid/catkin_ws/src/fanboat/devel/include " STREQUAL " ")
     if(IS_ABSOLUTE ${idir} AND IS_DIRECTORY ${idir})
       set(include ${idir})
     elseif("${idir} " STREQUAL "include ")
-=======
-if(NOT "" STREQUAL "")
-  set(lab3_INCLUDE_DIRS "")
-  set(_include_dirs "")
-  foreach(idir ${_include_dirs})
-    if(IS_ABSOLUTE ${idir} AND IS_DIRECTORY ${idir})
-      set(include ${idir})
-    elseif("${idir}" STREQUAL "include")
->>>>>>> 8f00e7774a103ee680e8144a155c28aad7a2b6cf
       get_filename_component(include "${lab3_DIR}/../../../include" ABSOLUTE)
       if(NOT IS_DIRECTORY ${include})
         message(FATAL_ERROR "Project 'lab3' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  Ask the maintainer 'viki <viki@todo.todo>' to fix it.")
       endif()
     else()
-<<<<<<< HEAD
       message(FATAL_ERROR "Project 'lab3' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/odroid/catkin_ws/src/fanboat/src/lab3/${idir}'.  Ask the maintainer 'viki <viki@todo.todo>' to fix it.")
-=======
-      message(FATAL_ERROR "Project 'lab3' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/viki/catkin_ws/src/fanboat/src/lab3/${idir}'.  Ask the maintainer 'viki <viki@todo.todo>' to fix it.")
->>>>>>> 8f00e7774a103ee680e8144a155c28aad7a2b6cf
     endif()
     _list_append_unique(lab3_INCLUDE_DIRS ${include})
   endforeach()
@@ -139,11 +112,7 @@ endif()
 set(libraries "")
 foreach(library ${libraries})
   # keep build configuration keywords, target names and absolute libraries as-is
-<<<<<<< HEAD
   if("${library}" MATCHES "^(debug|optimized|general)$")
-=======
-  if("${library}" MATCHES "^debug|optimized|general$")
->>>>>>> 8f00e7774a103ee680e8144a155c28aad7a2b6cf
     list(APPEND lab3_LIBRARIES ${library})
   elseif(TARGET ${library})
     list(APPEND lab3_LIBRARIES ${library})
@@ -153,11 +122,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-<<<<<<< HEAD
-    foreach(path /home/odroid/catkin_ws/src/fanboat/devel/lib;/home/odroid/catkin_ws/devel/lib;/opt/ros/indigo/lib)
-=======
-    foreach(path /home/viki/catkin_ws/src/fanboat/devel/lib;/home/viki/catkin_ws/src/fanboat/devel/lib;/home/viki/catkin_ws/devel/lib;/opt/ros/indigo/lib)
->>>>>>> 8f00e7774a103ee680e8144a155c28aad7a2b6cf
+    foreach(path /home/odroid/catkin_ws/src/fanboat/devel/lib;/home/odroid/catkin_ws/src/fanboat/devel/lib;/home/odroid/catkin_ws/devel/lib;/opt/ros/indigo/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
