@@ -46,10 +46,10 @@ VisualArbitrator::VisualArbitrator()
 	bool lookForBall = true;
 	void VisualArbitrator::imageCb(const sensor_msgs::ImageConstPtr& msg){
 		if(lookForBall == true){
-			ball_img_pub_.publish(*msg);
+			ball_img_pub_.publish(msg);
 		}
 		else{
-			land_img_pub_.publish(*msg);
+			land_img_pub_.publish(msg);
 		}
 	}
 
