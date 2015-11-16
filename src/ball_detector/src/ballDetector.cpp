@@ -99,7 +99,7 @@ private:
 BallDetector::BallDetector()
   :it(nh)
   {
-    
+
     //Get any thresholds from the parameter server
     //centered lens camera
     //int lowh = 125, lows = 0, lowv = 25;
@@ -129,11 +129,11 @@ BallDetector::BallDetector()
 
     image_sub_ = it.subscribe("image", 1, &BallDetector::imageCb, this);
 
-    
+
     lowh_pub_ = nh.advertise<std_msgs::Float64>("hsv/center/low/h", 1);
     lows_pub_ = nh.advertise<std_msgs::Float64>("hsv/center/low/s", 1);
     lowv_pub_ = nh.advertise<std_msgs::Float64>("hsv/center/low/v", 1);
-    
+
     meanh_pub_ = nh.advertise<std_msgs::Float64>("hsv/center/mean/h", 1);
     means_pub_ = nh.advertise<std_msgs::Float64>("hsv/center/mean/s", 1);
     meanv_pub_ = nh.advertise<std_msgs::Float64>("hsv/center/mean/v", 1);
@@ -141,9 +141,9 @@ BallDetector::BallDetector()
     highh_pub_ = nh.advertise<std_msgs::Float64>("hsv/center/high/h", 1);
     highs_pub_ = nh.advertise<std_msgs::Float64>("hsv/center/high/s", 1);
     highv_pub_ = nh.advertise<std_msgs::Float64>("hsv/center/high/v", 1);
-    
+
     circle_pub_ = nh.advertise<ball_detector::ballLocation>("ballLocation", 1);
-    
+
 #ifdef BALLDETECTOR_DEBUG
     //Advertise debug images
     debugImg1_pub_ = it.advertise("balldebug/img1",1);
@@ -216,7 +216,7 @@ inline void BallDetector::debugTimeSend(){
   double time = (ros::Time::now()-debugTimerTotalTime).toSec();
   static double avgTime = time;
   avgTime = 0.99*avgTime + 0.01*time;
-  
+
   //first slot was reserved in init for the total time
   debugTimes.times.at(0) = time;
   //second is the average time
@@ -294,7 +294,7 @@ void BallDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
   }else{
     colorImg = cv_const_ptr->image;
   }
-#else 
+#else
   static cv::Mat colorImg;
   colorImg = cv_const_ptr->image;
 #endif
@@ -306,7 +306,7 @@ void BallDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
     debugTimeRecordAndReStart("allocate");
   }
 #endif
-  
+
   //colorImg is type CV_8U
   cv::cvtColor(colorImg,hsvImg,CV_RGB2HSV);
   //cv::cvtColor(colorImg,hsvImg,CV_RGB2HLS);
@@ -434,27 +434,27 @@ void BallDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
             //draw max/min points
             /*
             cv::rectangle(colorImg,
-                          cv::Point(contours.at(idx).at(maxXidx).x - 1, 
+                          cv::Point(contours.at(idx).at(maxXidx).x - 1,
                                     contours.at(idx).at(maxXidx).y- 1),
-                          cv::Point(contours.at(idx).at(maxXidx).x + 1, 
+                          cv::Point(contours.at(idx).at(maxXidx).x + 1,
                                     contours.at(idx).at(maxXidx).y+ 1),
                           cv::Scalar(255,0,0,0),2);
             cv::rectangle(colorImg,
-                          cv::Point(contours.at(idx).at(maxYidx).x - 1, 
+                          cv::Point(contours.at(idx).at(maxYidx).x - 1,
                                     contours.at(idx).at(maxYidx).y- 1),
-                          cv::Point(contours.at(idx).at(maxYidx).x + 1, 
+                          cv::Point(contours.at(idx).at(maxYidx).x + 1,
                                     contours.at(idx).at(maxYidx).y+ 1),
                           cv::Scalar(255,0,0,0),2);
             cv::rectangle(colorImg,
-                          cv::Point(contours.at(idx).at(minXidx).x - 1, 
+                          cv::Point(contours.at(idx).at(minXidx).x - 1,
                                     contours.at(idx).at(minXidx).y- 1),
-                          cv::Point(contours.at(idx).at(minXidx).x + 1, 
+                          cv::Point(contours.at(idx).at(minXidx).x + 1,
                                     contours.at(idx).at(minXidx).y+ 1),
                           cv::Scalar(255,0,0,0),2);
             cv::rectangle(colorImg,
-                          cv::Point(contours.at(idx).at(minYidx).x - 1, 
+                          cv::Point(contours.at(idx).at(minYidx).x - 1,
                               contours.at(idx).at(minYidx).y- 1),
-                          cv::Point(contours.at(idx).at(minYidx).x + 1, 
+                          cv::Point(contours.at(idx).at(minYidx).x + 1,
                                     contours.at(idx).at(minYidx).y+ 1),
                           cv::Scalar(255,0,0,0),2);
             */
@@ -469,7 +469,7 @@ void BallDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
           }
         }
       }
-    }  
+    }
   }
 
 
@@ -502,7 +502,7 @@ void BallDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
     circ.x = rect.x + radius - threshImg.cols/2;
     circ.y = -1*(rect.y + radius - threshImg.rows/2);
     circ.radius = radius;
-    circ.distance = distance;
+    //circ.distance = distance;
     circle_pub_.publish(circ);
 #ifdef BALLDETECTOR_DEBUG
     if(debugLevel.sendDebugImages){
@@ -564,27 +564,27 @@ void BallDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
 
       //draw max/min points
       cv::rectangle(colorImg,
-                    cv::Point(contours.at(idxMax).at(maxXidx).x - 1, 
+                    cv::Point(contours.at(idxMax).at(maxXidx).x - 1,
                               contours.at(idxMax).at(maxXidx).y - 1),
-                    cv::Point(contours.at(idxMax).at(maxXidx).x + 1, 
+                    cv::Point(contours.at(idxMax).at(maxXidx).x + 1,
                               contours.at(idxMax).at(maxXidx).y + 1),
                     cv::Scalar(0,0,255,0),2);
       cv::rectangle(colorImg,
-                    cv::Point(contours.at(idxMax).at(maxYidx).x - 1, 
+                    cv::Point(contours.at(idxMax).at(maxYidx).x - 1,
                               contours.at(idxMax).at(maxYidx).y - 1),
-                    cv::Point(contours.at(idxMax).at(maxYidx).x + 1, 
+                    cv::Point(contours.at(idxMax).at(maxYidx).x + 1,
                               contours.at(idxMax).at(maxYidx).y + 1),
                     cv::Scalar(0,0,255,0),2);
       cv::rectangle(colorImg,
-                    cv::Point(contours.at(idxMax).at(minXidx).x - 1, 
+                    cv::Point(contours.at(idxMax).at(minXidx).x - 1,
                               contours.at(idxMax).at(minXidx).y - 1),
-                    cv::Point(contours.at(idxMax).at(minXidx).x + 1, 
+                    cv::Point(contours.at(idxMax).at(minXidx).x + 1,
                               contours.at(idxMax).at(minXidx).y + 1),
                     cv::Scalar(0,0,255,0),2);
       cv::rectangle(colorImg,
-                    cv::Point(contours.at(idxMax).at(minYidx).x - 1, 
+                    cv::Point(contours.at(idxMax).at(minYidx).x - 1,
                               contours.at(idxMax).at(minYidx).y - 1),
-                    cv::Point(contours.at(idxMax).at(minYidx).x + 1, 
+                    cv::Point(contours.at(idxMax).at(minYidx).x + 1,
                               contours.at(idxMax).at(minYidx).y + 1),
                     cv::Scalar(0,0,255,0),2);
     }

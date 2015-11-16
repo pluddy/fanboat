@@ -55,10 +55,11 @@ VisualArbitrator::VisualArbitrator()
 		image.step = msg->step;
 		image.data = msg->data;
 		if(lookForBall == true){
-			ball_img_pub_.publish(image);
+
+			ball_img_pub_.publish(msg);
 		}
 		else{
-			land_img_pub_.publish(image);
+			land_img_pub_.publish(msg);
 		}
 	}
 

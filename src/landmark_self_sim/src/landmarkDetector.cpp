@@ -84,7 +84,7 @@ GrayImage cvToGrayImage(cv::Mat img){
       imRef(retImg,j,i) = grayImg.at<uchar>(i,j);
     }
   }
-          
+
   return retImg;
 }
 
@@ -134,7 +134,7 @@ void LandmarkDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
     landm lam = lamarr.lm[i];
     ROS_INFO("Landmark @ %3d,%3d to %d,%d - code = %d\n",
              lam.xtop, lam.ytop, lam.xbottom, lam.ybottom, lam.code);
-    double height =  sqrt((lam.xtop-lam.xbottom)*(lam.xtop-lam.xbottom) 
+    double height =  sqrt((lam.xtop-lam.xbottom)*(lam.xtop-lam.xbottom)
                               +(lam.ytop-lam.ybottom)*(lam.ytop-lam.ybottom) );
     double distance = (180/height) * 100;
 
