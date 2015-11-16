@@ -17,7 +17,7 @@ private:
 	void angle_tri_callback(const lab2::angle_msg::ConstPtr& ang);
 	void angle_rc_callback(const lab2::angle_msg::ConstPtr& ang);
 	void angle_map_callback(const lab2::angle_msg::ConstPtr& ang);
-
+	void angle_servo_callback(const lab2::angle_msg::ConstPtr& ang);
 
 	ros::NodeHandle nh_;
 	int lb_, a_button_, b_button_, x_button_, y_button_, up_d_pad_, down_d_pad_, left_d_pad_, right_d_pad_, left_joy_button_;
@@ -32,7 +32,8 @@ private:
 
 //Set values to read from xbox controller
 arbitrator::arbitrator():
-	a_button_(0), //joystick
+	//a_button_(0), //joystick
+	a_button_(0), //servo
 	b_button_(1), //rc
 	x_button_(2), //mapping
 	y_button_(3), //triangle
@@ -52,7 +53,7 @@ arbitrator::arbitrator():
 		angle_map_sub_ = nh_.subscribe<lab2::angle_msg>("angle_map", 1, &arbitrator::angle_map_callback, this);
 		angle_tri_sub_ = nh_.subscribe<lab2::angle_msg>("angle_tri", 1, &arbitrator::angle_tri_callback, this);
 		angle_rc_sub_ = nh_.subscribe<lab2::angle_msg>("angle_rc", 1, &arbitrator::angle_rc_callback, this);
-
+		angle_servo_sub_ = nh_.subscribe<lab2::angle_msg>("CameraServoAngle", 1, &arbitrator::angle_servo_callback, this);
 	//Publish arbitrated values to angle_joy
 		arb_pub = nh_.advertise<lab2::angle_msg>("angle_arb", 1);
 
@@ -69,23 +70,6 @@ void arbitrator::angle_joy_callback(const lab2::angle_msg::ConstPtr& ang)
 	lab2::angle_msg msg;
 	msg.angle = ang->angle;
 	msg.thrust = ang->thrust;
-	// if(arb_value == 0){
-	// 	ROS_INFO("JOY");
-	// 	ROS_INFO("JOY");
-	// 	ROS_INFO("JOY");
-	// }
-	// else if(arb_value == 1){
-	// 	ROS_INFO("triangle");
-	// 	ROS_INFO("triangle");
-	// 	ROS_INFO("triangle");
-	// }
-	// else if(arb_value == 2){
-	// 	ROS_INFO("REACTIVE");
-	// 	ROS_INFO("REACTIVE");
-	// 	ROS_INFO("REACTIVE");
-	// }
-
-
 
 	if(on && arb_value == 0) {
 		if(up == true){
@@ -112,10 +96,21 @@ void arbitrator::angle_joy_callback(const lab2::angle_msg::ConstPtr& ang)
 
 		}
 		arb_pub.publish(msg);
-	} else if(!on || arb_value < 0 || arb_value > 2) {
+	} else if(!on || arb_value < 0 || arb_value > 3) {
 		msg.angle = 0;
 		msg.thrust = 0;
 		//arb_pub.publish(msg);
+	}
+}
+
+//If this topic should be forwarded, forward it
+void arbitrator::angle_servo_callback(const lab2::angle_msg::ConstPtr& ang)
+{ 
+	lab2::angle_msg msg;
+	msg.angle = ang->angle;
+	msg.thrust = ang->thrust;
+	if(on && arb_value == 0) {
+		arb_pub.publish(msg);
 	}
 }
 
