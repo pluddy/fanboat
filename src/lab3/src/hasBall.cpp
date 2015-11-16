@@ -19,21 +19,18 @@ private:
 
 };
 
-hasBall::hasBall():
+hasBall::hasBall()
 {
-	//Subscribe to arbitated angle messages
+	//Subscribe to sensor messages
 	sensors_sub_ = nh_.subscribe<fanboat_ll::fanboatLL>("sensors", 1, &hasBall::sensorFilter_callback, this);
 
-	//Publish to angles topic
+	//Publish to hasBall topic
 	hasBall_pub_ = nh_.advertise<lab3::hasBall>("hasBall", 1);
-
 }
 
 //Variables
 fanboat_ll::fanboatLL fll;
 
-//we want the boat to stay within 350-425 range finders for sensors
-//Get feedback from fanboat
 void hasBall::sensorFilter_callback(const fanboat_ll::fanboatLL::ConstPtr& f_ll)
 {
 	fll = *f_ll;
@@ -43,15 +40,11 @@ void hasBall::sensorFilter_callback(const fanboat_ll::fanboatLL::ConstPtr& f_ll)
 	hasBall_pub_.publish(hasBall);
 }
 
-
-
-
 int main(int argc, char** argv)
 {
 
 	ros::init(argc, argv, "hasBall");
 	hasBall hasBall;
-
 
 	ros::spin();
 }

@@ -50,7 +50,6 @@ void VisualArbitrator::imageCb(const sensor_msgs::ImageConstPtr& image){
 
 int main(int argc, char** argv)
 {
-
 	ros::init(argc, argv, "visualArbitrator");
 	VisualArbitrator visualArbitrator;
 

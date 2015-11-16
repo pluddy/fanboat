@@ -173,3 +173,7 @@ add_executable(CameraServo src/CameraServo.cpp)
 target_link_libraries (CameraServo ${catkin_LIBRARIES})
 add_dependencies(CameraServo lab3_generate_message_cpp)
 add_dependencies(CameraServo lab2_generate_message_cpp)
+
+add_executable(hasBall src/hasBall.cpp)
+target_link_libraries (hasBall ${catkin_LIBRARIES})
+add_dependencies(hasBall lab3_generate_message_cpp)
