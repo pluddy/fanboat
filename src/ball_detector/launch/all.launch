@@ -17,9 +17,7 @@
   <node name="ballDetectorConfig" pkg="ball_detector" type="configGUI.py" />
   <include file="$(find ball_detector)/launch/displayDebugImages.launch" />
   <node name="landmarkDetector" pkg="landmark_self_sim" respawn="true" type="landmarkDetector" output="screen" />
-<<<<<<< HEAD
-=======
   <node name="landmarkServo" pkg="landmark_self_sim" respawn="true" type="landmarkServo" output="screen" />  
->>>>>>> c6823a70fa837847d7c5fe941b9f04a6628354bd
+
 
 </launch>

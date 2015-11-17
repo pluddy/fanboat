@@ -308,7 +308,7 @@ void BallDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
 #endif
 
   //colorImg is type CV_8U
-  cv::cvtColor(colorImg,hsvImg,CV_RGB2HSV);
+  cv::cvtColor(colorImg,hsvImg,CV_BGR2HSV);
   //cv::cvtColor(colorImg,hsvImg,CV_RGB2HLS);
   //cv::cvtColor(colorImg,hsvImg,CV_RGB2Lab); //faster but not on gumstix?
 
@@ -495,14 +495,14 @@ void BallDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
     for (int i = 0; i < 5; i++){
 	distanceTotal += movingDistanceWindow[i];
     }
-    double distance = (40/(distanceTotal/5))*100;
+    double distance = (40/(distanceTotal/5.0))*100;
     circ.imageWidth = colorImg.cols;
     circ.imageHeight = colorImg.rows;
     //Make it relative to the center of the image
     circ.x = rect.x + radius - threshImg.cols/2;
     circ.y = -1*(rect.y + radius - threshImg.rows/2);
     circ.radius = radius;
-    //circ.distance = distance;
+    circ.distance = distance;
     circle_pub_.publish(circ);
 #ifdef BALLDETECTOR_DEBUG
     if(debugLevel.sendDebugImages){

@@ -27,7 +27,7 @@ CameraServo::CameraServo()
   img_arb_sub_ = nh.subscribe("ballLandInfo", 1, &CameraServo::msgCallback, this);
 
   //Landmark position publisher
-  angle_pub_ = nh.advertise<lab2::angle_msg>("CameraServoAngle",1);
+  angle_pub_ = nh.advertise<lab2::angle_msg>("angle_cam",1);
 }
 
 void CameraServo::msgCallback(const lab3::ballLandInfo::ConstPtr& msg)

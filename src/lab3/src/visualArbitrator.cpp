@@ -46,6 +46,7 @@ void VisualArbitrator::imageCb(const sensor_msgs::ImageConstPtr& image){
 	else{
 		land_img_pub_.publish(*image);
 	}
+	lookForBall = !lookForBall;
 }
 
 int main(int argc, char** argv)

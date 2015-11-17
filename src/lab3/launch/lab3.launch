@@ -9,28 +9,61 @@
     <remap from="/usb_cam/image_raw" to="/image"/>
   </node>
   
-  <!--yellow-->
-  <!--<rosparam param="thresh/">
-    high: {h: 99, s: 255, v: 255}
-    low: {h: 90, s: 112, v: 100}
-  </rosparam>-->
+  <!--green-->
+  <rosparam param="thresh/">
+    high: {h: 87, s: 235, v: 255}
+    low: {h: 80, s: 40, v: 22}
+  </rosparam>
 
   <!--red-->
-  <rosparam param="thresh/">
-    high: {h: 125, s: 255, v: 255}
-    low: {h: 115, s: 112, v: 100}
-  </rosparam> 
-  <node name="ball_detector_node" pkg="ball_detector" respawn="true" type="ball_detector_node" output="screen" />
-  <node name="ballDetectorConfig" pkg="ball_detector" type="configGUI.py" />
-  <!--<include file="$(find ball_detector)/launch/displayDebugImages.launch" />-->
-  <node name="landmarkDetector" pkg="landmark_self_sim" respawn="true" type="landmarkDetector" output="screen" />
-  <node name="CameraServo" pkg="lab3" respawn="true" type="CameraServo" output="screen" />  
-  <node name="ballLandInfo" pkg="lab3" respawn="true" type="ballLandInfo" output="screen" />
-  <node name="hasBall" pkg="lab3" respawn="true" type="hasBall" output="screen" />
-  <node name="arbitrator" pkg="lab2" respawn="true" type="arbitrator" output="screen" />
+  <!-- <rosparam param="thresh/">
+    high: {h: 10, s: 180, v: 255}
+    low: {h: 2, s: 60, v: 30}
+  </rosparam> -->
+
+  <node pkg="ball_detector" name="ball_detector_node" type="ball_detector_node" output="screen" respawn="true" >
+    <remap from="/image" to="/image/ball" />
+  </node>
+  
+  <node pkg="landmark_self_sim" name="landmarkDetector" type="landmarkDetector" output="screen" respawn="true" >
+    <remap from="/image" to="/image/landmark" />
+  </node>
+  
   <node pkg="joy" name="joystick" type="joy_node"/>
-	<node pkg="lab2" name="joy_constant" type="joy_constant"/>
-	<node pkg="lab2" name="joyAngleIntegrater" type="joyAngleIntegrater"/>
-	<node pkg="lab2" name="sensorFilter" type="sensorFilter"/>
-	<node pkg="lab2" name="angularPositionPID" output="screen" type="angularPositionPID"/>
+  <node pkg="fanboat_ll" name="fanboat_serial" type="fanboat_serial.py" output="screen" respawn="true" />
+
+  <!--<node name="ballDetectorConfig" pkg="ball_detector" type="configGUI.py" />-->
+  <!--<include file="$(find ball_detector)/launch/displayDebugImages.launch" />-->
+  <!-- Display normal camera-->
+  <!--<node name="ball_debug1" pkg="image_view" type="image_view" respawn="false" output="screen" >
+    <remap from="/image" to="/balldebug/img1"/>
+  </node>-->
+
+  <!--Display threshold camera-->
+  <!--<node name="ball_debug2" pkg="image_view" type="image_view" respawn="false" output="screen" >
+    <remap from="/image" to="/balldebug/img2"/>
+  </node>-->
+  
+  <node pkg="lab2" name="arbitrator" type="arbitrator" output="screen" respawn="true" />
+  <node pkg="lab2" name="joy_constant" type="joy_constant" respawn="true" />
+  <node pkg="lab2" name="joyAngleIntegrater" type="joyAngleIntegrater" respawn="true" />
+  <node pkg="lab2" name="sensorFilter" type="sensorFilter" respawn="true" />
+  
+  <node pkg="lab2" name="angularPositionPID" output="screen" type="angularPositionPID" respawn="true" />
+  <param name="pValue" type="double" value="100"/>
+  <param name="dValue" type="double" value=".11"/>
+  <param name="iValue" type="double" value="0.0000"/> <!--0.0005 was working ok ish-->
+  <param name="iMax" type="double" value="0.0"/>
+  <param name="rightScale" type="double" value="1"/>
+  <param name="leftScale" type="double" value="1.2"/>
+  
+  <node pkg="lab3" name="hasBall" type="hasBall" output="screen" respawn="true" />
+  <node pkg="lab3" name="CameraServo" type="CameraServo" output="screen" respawn="true" />  
+  <node pkg="lab3" name="ballLandInfo" type="ballLandInfo" output="screen" respawn="true" />
+  <node pkg="lab3" name="visualArbitrator" output="screen" type="visualArbitrator">
+	  <remap from="/usb_cam/image_raw_ball" to="/image/ball" />
+	  <remap from="/usb_cam/image_raw_land" to="/image/landmark" />
+	  <remap from="/usb_cam/image_raw" to="/image" />
+	</node>
+
 </launch>

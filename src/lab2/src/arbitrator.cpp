@@ -27,6 +27,7 @@ private:
 	ros::Subscriber angle_tri_sub_;
 	ros::Subscriber angle_map_sub_;
 	ros::Subscriber angle_rc_sub_;
+  ros::Subscriber angle_servo_sub_;
 	ros::Subscriber joy_sub_;
 };
 
@@ -53,14 +54,14 @@ arbitrator::arbitrator():
 		angle_map_sub_ = nh_.subscribe<lab2::angle_msg>("angle_map", 1, &arbitrator::angle_map_callback, this);
 		angle_tri_sub_ = nh_.subscribe<lab2::angle_msg>("angle_tri", 1, &arbitrator::angle_tri_callback, this);
 		angle_rc_sub_ = nh_.subscribe<lab2::angle_msg>("angle_rc", 1, &arbitrator::angle_rc_callback, this);
-		angle_servo_sub_ = nh_.subscribe<lab2::angle_msg>("CameraServoAngle", 1, &arbitrator::angle_servo_callback, this);
+		angle_servo_sub_ = nh_.subscribe<lab2::angle_msg>("angle_cam", 1, &arbitrator::angle_servo_callback, this);
 	//Publish arbitrated values to angle_joy
 		arb_pub = nh_.advertise<lab2::angle_msg>("angle_arb", 1);
 
 	}
 
 //Variables to communicate left/right motor power and current/final yaw values
-bool on = false;
+bool on = true; //!!! Note: when the controller is working, this should be false!!!
 int arb_value = 0; //0 = joy, 1 = tri, 2 = rc, else publish 0's
 bool up = false, down = false, left = false, right = false;
 //If this topic should be forwarded, forward it
@@ -155,9 +156,6 @@ void arbitrator::joy_callback(const sensor_msgs::Joy::ConstPtr& joy)
 	if(joy->buttons[lb_]) on = !on;
 	if(joy->buttons[a_button_]) { //A is joystick
 		arb_value = 0;
-		
-		//ROS_INFO("abutton? up: %d, down: %d, left: %d, right: %d", up, down, left, right);
-
 	} else if(joy->buttons[b_button_]) { //B is rc
 		arb_value = 2;
 	} else if(joy->buttons[y_button_]) { //Y is triangle
