@@ -5,7 +5,7 @@
 #include <sensor_msgs/image_encodings.h>
 #include <std_msgs/Float64.h>
 #include <geometry_msgs/Vector3.h>
-#include <std_msgs/Bool.h>
+#include <lab3/hasBall.h>
 
 class VisualArbitrator
 {
@@ -17,14 +17,15 @@ public:
 private:
 
 	void imageCb(const sensor_msgs::ImageConstPtr& msg);
-	//	void has_ball_callback(const std_msgs::Bool::ConstPtr& msg);
+	void has_ball_callback(const lab3::hasBall::ConstPtr& msg);
 
 
 
 	ros::NodeHandle nh_;
 	image_transport::ImageTransport it;
 	image_transport::Subscriber image_sub_;
-	//	ros::Subscriber has_ball_sub_;
+	
+	ros::Subscriber has_ball_sub_;
 	image_transport::Publisher ball_img_pub_;
 	image_transport::Publisher land_img_pub_;
 };
@@ -33,7 +34,8 @@ private:
 VisualArbitrator::VisualArbitrator() :it(nh_)
 {
 	image_sub_ = it.subscribe("/usb_cam/image_raw", 1, &VisualArbitrator::imageCb, this);
-
+	has_ball_sub_ = nh_.subscribe("hasBall", 1, &VisualArbitrator::has_ball_callback, this);
+	
 	land_img_pub_ = it.advertise("usb_cam/image_raw_land", 3);
 	ball_img_pub_ = it.advertise("usb_cam/image_raw_ball", 3);
 }
@@ -46,7 +48,12 @@ void VisualArbitrator::imageCb(const sensor_msgs::ImageConstPtr& image){
 	else{
 		land_img_pub_.publish(*image);
 	}
-	lookForBall = !lookForBall;
+}
+
+//If we don't have the ball, look for it
+void VisualArbitrator::has_ball_callback(const lab3::hasBall::ConstPtr& msg)
+{
+  lookForBall = !msg->hasBall;
 }
 
 int main(int argc, char** argv)

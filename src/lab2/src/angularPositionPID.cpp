@@ -72,7 +72,6 @@ void anglepid(double target)
 {
 	double diff = target - fll.yaw;
 	diff = (diff > 180) ? diff-360 : (diff < -180)? diff + 360 : diff;
-	ROS_INFO("diff = %f ",diff);
 
 	//Setup PID values
 	double P = 1/pValue;
@@ -112,10 +111,7 @@ void anglepid(double target)
 		right = right * rightScale;
 	}
 
-	ROS_INFO("left = %f right = %f", left, right);
-	ROS_INFO(" ");
-	ROS_INFO(" ");
-	ROS_INFO(" ");
+	ROS_INFO("diff: %f, left = %f right = %f", diff, left, right);
 }
 
 //Get driving info and publish to fanboatLL
