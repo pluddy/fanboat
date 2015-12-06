@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="project" name="test" type="rocket_node.py" output="screen"/>
+  <node pkg="project" name="test2" type="rocket_controller" output="screen"/>
+</launch>
