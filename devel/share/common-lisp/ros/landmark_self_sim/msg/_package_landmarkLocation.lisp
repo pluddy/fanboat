@@ -11,6 +11,8 @@
           YBOTTOM
           HEIGHT-VAL
           HEIGHT
+          DISTANCE-VAL
+          DISTANCE
           CODE-VAL
           CODE
 ))

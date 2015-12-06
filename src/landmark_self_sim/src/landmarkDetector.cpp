@@ -151,8 +151,9 @@ void LandmarkDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
     landmarkLoc.distance = distance;
     //ROS_INFO("top: x: %d, y: %d  bottom: x: %d, y: %d", lam.xtop,lam.ytop,lam.xbottom,lam.ybottom);
     //ROS_INFO("Height: %f", landmarkLoc.height);
-    //ROS_INFO("Distance: %f", landmarkLoc.distance);
+    ROS_INFO("Distance: %f", landmarkLoc.distance);
     //Publish it
+    
     landmark_pub_.publish(landmarkLoc);
 
     //Now add the marks to the image to indicate the detected frame

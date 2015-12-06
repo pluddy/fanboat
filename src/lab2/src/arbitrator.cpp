@@ -96,7 +96,7 @@ void arbitrator::angle_joy_callback(const lab2::angle_msg::ConstPtr& ang)
 			//ROS_INFO("RIGHT");
 
 		}
-		arb_pub.publish(msg);
+		//		arb_pub.publish(msg);
 	} else if(!on || arb_value < 0 || arb_value > 3) {
 		msg.angle = 0;
 		msg.thrust = 0;

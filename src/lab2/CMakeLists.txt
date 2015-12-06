@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   message_generation
+  fanboat_ll
 )
 
 ## System dependencies are found with CMake's conventions
@@ -68,6 +69,7 @@ find_package(catkin REQUIRED COMPONENTS
  generate_messages(
    DEPENDENCIES
    std_msgs
+   fanboat_ll
  )
 
 ###################################
@@ -168,28 +170,28 @@ add_dependencies(joy_constant lab2_generate_message_cpp)
 
 add_executable(joyAngleIntegrater src/joyAngleIntegrater.cpp)
 target_link_libraries (joyAngleIntegrater ${catkin_LIBRARIES})
-add_dependencies(joyAngleIntegrater lab2_generate_message_cpp)
+add_dependencies(joyAngleIntegrater lab2_generate_messages_cpp)
 
 add_executable(angularPositionPID src/angularPositionPID.cpp)
 target_link_libraries (angularPositionPID ${catkin_LIBRARIES})
-add_dependencies(angularPositionPID lab2_generate_message_cpp)
+add_dependencies(angularPositionPID lab2_generate_messages_cpp)
 
 add_executable(arbitrator src/arbitrator.cpp)
 target_link_libraries (arbitrator ${catkin_LIBRARIES})
-add_dependencies(arbitrator lab2_generate_message_cpp)
+add_dependencies(arbitrator lab2_generate_messages_cpp)
 
 add_executable(sensorFilter src/sensorFilter.cpp)
 target_link_libraries (sensorFilter ${catkin_LIBRARIES})
-add_dependencies(sensorFilter lab2_generate_message_cpp)
+add_dependencies(sensorFilter lab2_generate_messages_cpp)
 
 add_executable(reactiveControl src/reactiveControl.cpp)
 target_link_libraries (reactiveControl ${catkin_LIBRARIES})
-add_dependencies(reactiveControl lab2_generate_message_cpp)
+add_dependencies(reactiveControl lab2_generate_messages_cpp)
 
 add_executable(triangle src/triangle.cpp)
 target_link_libraries (triangle ${catkin_LIBRARIES})
-add_dependencies(triangle lab2_generate_message_cpp)
+add_dependencies(triangle lab2_generate_messages_cpp)
 
 add_executable(mapping src/mapping.cpp)
 target_link_libraries (mapping ${catkin_LIBRARIES})
-add_dependencies(mapping lab2_generate_message_cpp)
+add_dependencies(mapping lab2_generate_messages_cpp)

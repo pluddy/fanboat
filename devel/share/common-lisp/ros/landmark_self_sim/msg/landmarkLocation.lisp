@@ -37,6 +37,11 @@
     :initarg :height
     :type cl:float
     :initform 0.0)
+   (distance
+    :reader distance
+    :initarg :distance
+    :type cl:float
+    :initform 0.0)
    (code
     :reader code
     :initarg :code
@@ -82,6 +87,11 @@
   (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader landmark_self_sim-msg:height-val is deprecated.  Use landmark_self_sim-msg:height instead.")
   (height m))
 
+(cl:ensure-generic-function 'distance-val :lambda-list '(m))
+(cl:defmethod distance-val ((m <landmarkLocation>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader landmark_self_sim-msg:distance-val is deprecated.  Use landmark_self_sim-msg:distance instead.")
+  (distance m))
+
 (cl:ensure-generic-function 'code-val :lambda-list '(m))
 (cl:defmethod code-val ((m <landmarkLocation>))
   (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader landmark_self_sim-msg:code-val is deprecated.  Use landmark_self_sim-msg:code instead.")
@@ -114,6 +124,15 @@
     (cl:write-byte (cl:ldb (cl:byte 8 24) unsigned) ostream)
     )
   (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'height))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 32) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 40) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
+  (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'distance))))
     (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
@@ -166,6 +185,16 @@
       (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
     (cl:setf (cl:slot-value msg 'height) (roslisp-utils:decode-double-float-bits bits)))
+    (cl:let ((bits 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 32) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 40) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
+    (cl:setf (cl:slot-value msg 'distance) (roslisp-utils:decode-double-float-bits bits)))
     (cl:let ((unsigned 0))
       (cl:setf (cl:ldb (cl:byte 8 0) unsigned) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 8) unsigned) (cl:read-byte istream))
@@ -182,16 +211,16 @@
   "landmark_self_sim/landmarkLocation")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<landmarkLocation>)))
   "Returns md5sum for a message object of type '<landmarkLocation>"
-  "5fff4f104cc29dd1741797346a6aa89e")
+  "b289b3c1431947d09ac1f49e39daa470")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'landmarkLocation)))
   "Returns md5sum for a message object of type 'landmarkLocation"
-  "5fff4f104cc29dd1741797346a6aa89e")
+  "b289b3c1431947d09ac1f49e39daa470")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<landmarkLocation>)))
   "Returns full string definition for message of type '<landmarkLocation>"
-  (cl:format cl:nil "Header header~%~%# The x,y location of the top and bottom point of the detected landmark.~%int32 xtop~%int32 ytop~%int32 xbottom~%int32 ybottom~%~%# Height of the landmark as computed as the distance between the top~%# and bottom points.~%float64 height~%~%# The landmark code id number which should can range from 0 to 255.  If~%# this is -1 then it means the code was not correctly read (and the~%# above points may not be accurate).~%int32 code~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
+  (cl:format cl:nil "Header header~%~%# The x,y location of the top and bottom point of the detected landmark.~%int32 xtop~%int32 ytop~%int32 xbottom~%int32 ybottom~%~%# Height of the landmark as computed as the distance between the top~%# and bottom points.~%float64 height~%float64 distance~%~%# The landmark code id number which should can range from 0 to 255.  If~%# this is -1 then it means the code was not correctly read (and the~%# above points may not be accurate).~%int32 code~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'landmarkLocation)))
   "Returns full string definition for message of type 'landmarkLocation"
-  (cl:format cl:nil "Header header~%~%# The x,y location of the top and bottom point of the detected landmark.~%int32 xtop~%int32 ytop~%int32 xbottom~%int32 ybottom~%~%# Height of the landmark as computed as the distance between the top~%# and bottom points.~%float64 height~%~%# The landmark code id number which should can range from 0 to 255.  If~%# this is -1 then it means the code was not correctly read (and the~%# above points may not be accurate).~%int32 code~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
+  (cl:format cl:nil "Header header~%~%# The x,y location of the top and bottom point of the detected landmark.~%int32 xtop~%int32 ytop~%int32 xbottom~%int32 ybottom~%~%# Height of the landmark as computed as the distance between the top~%# and bottom points.~%float64 height~%float64 distance~%~%# The landmark code id number which should can range from 0 to 255.  If~%# this is -1 then it means the code was not correctly read (and the~%# above points may not be accurate).~%int32 code~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <landmarkLocation>))
   (cl:+ 0
      (roslisp-msg-protocol:serialization-length (cl:slot-value msg 'header))
@@ -199,6 +228,7 @@
      4
      4
      4
+     8
      8
      4
 ))
@@ -211,5 +241,6 @@
     (cl:cons ':xbottom (xbottom msg))
     (cl:cons ':ybottom (ybottom msg))
     (cl:cons ':height (height msg))
+    (cl:cons ':distance (distance msg))
     (cl:cons ':code (code msg))
 ))

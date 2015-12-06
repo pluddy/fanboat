@@ -31,8 +31,8 @@ private:
 ballLandInfo::ballLandInfo()
 {
 	//Subscribe to joy_constant for button controls to arbitrate
-	ball_sub_ =  nh_.subscribe<ball_detector::ballLocation>("ballLocation", 1, &ballLandInfo::ball_callback, this);
-	land_sub_ =  nh_.subscribe<landmark_self_sim::landmarkLocation>("landmarkLocation", 1, &ballLandInfo::land_callback, this);
+	ball_sub_ =  nh_.subscribe<ball_detector::ballLocation>("ballConstant", 1, &ballLandInfo::ball_callback, this);
+	land_sub_ =  nh_.subscribe<landmark_self_sim::landmarkLocation>("landConstant", 1, &ballLandInfo::land_callback, this);
 	has_ball_sub_ = nh_.subscribe<lab3::hasBall>("hasBall",1, &ballLandInfo::has_ball_callback, this);
 	//Subscribe to topics to arbitrate between
 	//Publish arbitrated values to angle_joy
@@ -53,20 +53,22 @@ void ballLandInfo::ball_callback(const ball_detector::ballLocation::ConstPtr& ms
 void ballLandInfo::land_callback(const landmark_self_sim::landmarkLocation::ConstPtr& msg){
 	if(lookForBall != true){
 		lab3::ballLandInfo info;
-		int xtop = msg->xtop;
+		int xtop = msg->xtop+320;
 		int ytop = msg->ytop;
-		int xbottom = msg->xbottom;
+		int xbottom = msg->xbottom+320;
 		int ybottom = msg->ybottom;
 		int height = msg->height;
 
 		int width = (11/8.5)*height;
 
 		int x = ((xtop + xbottom)/2) - width/2;
-
+		x -= 320;
 		info.x = x;
 		info.y = (ytop + ybottom) /2;
 		info.distance = msg->distance;
 		info.type = 0;
+		info.header.stamp = ros::Time::now();
+//		ROS_INFO("hurdurhur");
 		ball_land_pub_.publish(info);
 	}
 }

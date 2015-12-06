@@ -10,6 +10,10 @@ find_package(catkin REQUIRED
   std_msgs
   image_transport
   message_generation
+  fanboat_ll
+  ball_detector
+  landmark_self_sim
+  lab2
 )
 
 ## System dependencies are found with CMake's conventions
@@ -70,6 +74,10 @@ add_message_files(
  generate_messages(
    DEPENDENCIES
    std_msgs  # Or other packages containing msgs
+   fanboat_ll
+   ball_detector
+   landmark_self_sim
+   lab2
  )
 
 ###################################
@@ -163,17 +171,25 @@ catkin_package(
 
 add_executable(visualArbitrator src/visualArbitrator.cpp)
 target_link_libraries (visualArbitrator ${catkin_LIBRARIES})
-add_dependencies(visualArbitrator lab3_generate_message_cpp)
+add_dependencies(visualArbitrator lab3_generate_messages_cpp)
 
 add_executable(ballLandInfo src/ballLandInfo.cpp)
 target_link_libraries (ballLandInfo ${catkin_LIBRARIES})
-add_dependencies(ballLandInfo lab3_generate_message_cpp)
+add_dependencies(ballLandInfo lab3_generate_messages_cpp)
 
 add_executable(CameraServo src/CameraServo.cpp)
 target_link_libraries (CameraServo ${catkin_LIBRARIES})
-add_dependencies(CameraServo lab3_generate_message_cpp)
-add_dependencies(CameraServo lab2_generate_message_cpp)
+add_dependencies(CameraServo lab3_generate_messages_cpp)
+add_dependencies(CameraServo lab2_generate_messages_cpp)
 
 add_executable(hasBall src/hasBall.cpp)
 target_link_libraries (hasBall ${catkin_LIBRARIES})
-add_dependencies(hasBall lab3_generate_message_cpp)
+add_dependencies(hasBall lab3_generate_messages_cpp)
+
+add_executable(ballConstant src/ballConstant.cpp)
+target_link_libraries (ballConstant ${catkin_LIBRARIES})
+add_dependencies(ballConstant lab3_generate_messages_cpp)
+
+add_executable(landConstant src/landConstant.cpp)
+target_link_libraries (landConstant ${catkin_LIBRARIES})
+add_dependencies(landConstant lab3_generate_messages_cpp)

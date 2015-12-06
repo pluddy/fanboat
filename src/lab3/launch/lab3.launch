@@ -10,22 +10,28 @@
   </node>
   
   <!--green-->
-  <rosparam param="thresh/">
-    high: {h: 87, s: 235, v: 255}
-    low: {h: 80, s: 40, v: 22}
-  </rosparam>
+  <!--<rosparam param="thresh/">
+    high: {h: 89, s: 255, v: 255}
+    low: {h: 79, s: 40, v: 22}
+  </rosparam>-->
 
   <!--red-->
-  <!-- <rosparam param="thresh/">
+  <!--<rosparam param="thresh/">
     high: {h: 10, s: 180, v: 255}
     low: {h: 2, s: 60, v: 30}
-  </rosparam> -->
+  </rosparam>-->
 
+  <!--purple-->
+  <rosparam param="thresh/">
+    high: {h: 182, s: 180, v: 226}
+    low: {h: 126, s: 36, v: 39}
+  </rosparam>
+  
   <node pkg="ball_detector" name="ball_detector_node" type="ball_detector_node" output="screen" respawn="true" >
     <remap from="/image" to="/image/ball" />
   </node>
   
-  <node pkg="landmark_self_sim" name="landmarkDetector" type="landmarkDetector" output="screen" respawn="true" >
+  <node pkg="landmark_self_sim" name="landmarkDetector" type="landmarkDetector" respawn="true" >
     <remap from="/image" to="/image/landmark" />
   </node>
   
@@ -34,36 +40,42 @@
 
   <!--<node name="ballDetectorConfig" pkg="ball_detector" type="configGUI.py" />-->
   <!--<include file="$(find ball_detector)/launch/displayDebugImages.launch" />-->
-  <!-- Display normal camera-->
+  <!--Display normal camera-->
   <!--<node name="ball_debug1" pkg="image_view" type="image_view" respawn="false" output="screen" >
     <remap from="/image" to="/balldebug/img1"/>
   </node>-->
 
-  <!--Display threshold camera-->
+  <!-- Display threshold camera -->
   <!--<node name="ball_debug2" pkg="image_view" type="image_view" respawn="false" output="screen" >
     <remap from="/image" to="/balldebug/img2"/>
   </node>-->
   
-  <node pkg="lab2" name="arbitrator" type="arbitrator" output="screen" respawn="true" />
+  node pkg="lab2" name="arbitrator" type="arbitrator" output="screen" respawn="true" />-->
   <node pkg="lab2" name="joy_constant" type="joy_constant" respawn="true" />
   <node pkg="lab2" name="joyAngleIntegrater" type="joyAngleIntegrater" respawn="true" />
   <node pkg="lab2" name="sensorFilter" type="sensorFilter" respawn="true" />
   
   <node pkg="lab2" name="angularPositionPID" type="angularPositionPID" respawn="true" />
-  <param name="pValue" type="double" value="100"/>
-  <param name="dValue" type="double" value=".11"/>
+  <param name="pValue" type="double" value="60"/>
+  <param name="dValue" type="double" value=".05"/>
   <param name="iValue" type="double" value="0.0000"/> <!--0.0005 was working ok ish-->
   <param name="iMax" type="double" value="0.0"/>
-  <param name="rightScale" type="double" value="1"/>
-  <param name="leftScale" type="double" value="1.2"/>
+  <param name="rightScale" type="double" value="1.4"/>
+  <param name="leftScale" type="double" value="1.4"/>
   
-  <node pkg="lab3" name="hasBall" type="hasBall" output="screen" respawn="true" />
-  <node pkg="lab3" name="CameraServo" type="CameraServo" output="screen" respawn="true" />  
+  <param name="landmarkCode" type="int" value="73"/>
+  
+  <node pkg="lab3" name="hasBall" type="hasBall" respawn="true" />
+  <node pkg="lab3" name="CameraServo" type="CameraServo" respawn="true" output="screen" >
+    <remap from="/angle_cam" to="/angle_arb" />
+  </node>  
   <node pkg="lab3" name="ballLandInfo" type="ballLandInfo" output="screen" respawn="true" />
-  <node pkg="lab3" name="visualArbitrator" output="screen" type="visualArbitrator">
+  <node pkg="lab3" name="visualArbitrator" type="visualArbitrator">
 	  <remap from="/usb_cam/image_raw_ball" to="/image/ball" />
 	  <remap from="/usb_cam/image_raw_land" to="/image/landmark" />
 	  <remap from="/usb_cam/image_raw" to="/image" />
 	</node>
+	<node pkg="lab3" name="ballConstant" type="ballConstant" output="screen" respawn="true" />
+  <node pkg="lab3" name="landConstant" type="landConstant" output="screen" respawn="true" />
 
 </launch>

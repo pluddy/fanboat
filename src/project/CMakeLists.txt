@@ -167,4 +167,4 @@ include_directories(
 
 add_executable(rocket_controller src/rocket_controller.cpp)
 target_link_libraries (rocket_controller ${catkin_LIBRARIES})
-add_dependencies(rocket_controller project_generate_message_cpp)
+add_dependencies(rocket_controller project_generate_messages_cpp)

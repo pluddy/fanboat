@@ -66,7 +66,10 @@ int state = 0;
 //pulled from the arduino library.
 double map(double x, double in_min, double in_max, double out_min, double out_max)
 {
-	return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  x = (x < in_min) ? in_min : ((x > in_max) ? in_max : x);
+  x = (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  x = (x < out_min) ? out_min : ((x > out_max) ? out_max : x);
+  return x;
 }
 void anglepid(double target)
 {
@@ -96,18 +99,20 @@ void anglepid(double target)
 	//previousIntegral = integral;
 
 	//ROS_INFO("pFactor = %f dFactor = %f iFactor = %f", pFactor, dFactor, iFactor);
+	//if(fabs(diff) < 8) {
+	//  left = 0.8;
+	//  right = 0.7;
+	//}
 	if(diff > 0) {
 	//	left = pFactor + dFactor + iFactor;
 		left = P*diff + dFactor;
 		if(left > 1) left=1;
-		left = map(left, 0.0,1.0,.45,.7);
 		left = left * leftScale;
 		
 	} else {
 	//	right = -pFactor - dFactor - iFactor;
 		right = P*(-1*diff) - dFactor;
 		if(right > 1) right=1;
-		right = map(right, 0.0,1.0,.35,.55);
 		right = right * rightScale;
 	}
 
@@ -118,10 +123,26 @@ void anglepid(double target)
 void angularPositionPID::angle_callback(const lab2::angle_msg::ConstPtr& am)
 {
 	fanboat_ll::fanboatMotors boat;
-	left = am->thrust;
-	right = am->thrust;
+	//left = am->thrust;
+	//right = am->thrust;
+	left = 0;
+	right = 0;
 
 	anglepid(am->angle);
+
+	if(left > right) {
+	  left = map(left + am->thrust, am->thrust,1.0,0.6, 1.0);
+	  right = map(right + am->thrust, am->thrust,1.0,0.15, 0.25);
+	  if(fabs(previousDiff) < 5) {
+	    right = left;
+	  }
+	} else {
+	  left = map(left + am->thrust, am->thrust,1.0,0.6, 0.25);
+          right = map(right + am->thrust, am->thrust,1.0,0.55, 1.0);
+	  if(fabs(previousDiff) < 5) {
+	    left = right;
+	  }
+	}
 
 	boat.left = left;
 	boat.right = right;

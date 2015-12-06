@@ -85,7 +85,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES landmark_self_sim
-#  CATKIN_DEPENDS cv_bridge roscpp std_msgs usb_cam
+  CATKIN_DEPENDS cv_bridge roscpp std_msgs usb_cam
 #  DEPENDS system_lib
 )
 

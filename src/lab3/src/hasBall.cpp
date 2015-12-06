@@ -32,15 +32,16 @@ hasBall::hasBall()
 fanboat_ll::fanboatLL fll;
 
 //Threshold values for sensors
-int leftLow = 400, leftHigh = 550, rightLow = 400, rightHigh = 550;
+int leftLow = 380, leftHigh = 550, rightLow = 380, rightHigh = 550;
 void hasBall::sensorFilter_callback(const fanboat_ll::fanboatLL::ConstPtr& f_ll)
 {
 	fll = *f_ll;
 	lab3::hasBall hasBall;
 	int left = fll.a0;
 	int right = fll.a1;
-	
+	//ROS_INFO("left sensor = %d\nright sensor = %d",left,right);	
 	//If outside this range, assume we have the ball
+	//fix this shit.
 	hasBall.hasBall = (left < leftLow) || (left > leftHigh) || (right < rightLow) || (right > rightHigh);
   ROS_INFO("%s", hasBall.hasBall ? "Find landmark" : "Find ball" );
 	hasBall_pub_.publish(hasBall);
