@@ -2,6 +2,7 @@
   <node name="my_cmd_script" pkg="project" type="run_cmd.py" output="screen">
     <param name="password" value="team123" />
   </node>
+
   <node name="usb_cam" pkg="usb_cam" respawn="true" type="usb_cam_node" output="screen">
     <param name="video_device" value="/dev/video0" />
     <param name="image_width" value="640" />
@@ -11,16 +12,23 @@
     <param name="io_method" value="mmap"/>
     <remap from="/usb_cam/image_raw" to="/image"/>
   </node>
-
-  <rosparam param="thresh/">
+  
+    <rosparam param="thresh/">
     high: {h: 171, s: 147, v: 255}
     low: {h: 164, s: 111, v: 83}
   </rosparam>
-  <node name="ball_detector_node" pkg="ball_detector" respawn="true" type="ball_detector_node" output="screen"/>
-  <node name="ballDetectorConfig" pkg="ball_detector" type="configGUI.py" />
+  
+  <node pkg="project" name="test" type="rocket_node.py" output="screen"/>
+  <node pkg="project" name="test2" type="rocket_controller" output="screen"/>
+  
   <include file="$(find ball_detector)/launch/displayDebugImages.launch" />
-  <!--<node name="landmarkDetector" pkg="landmark_self_sim" respawn="true" type="landmarkDetector" output="screen" />
-  <node name="landmarkServo" pkg="landmark_self_sim" respawn="true" type="landmarkServo" output="screen" />  -->
-
+  <node pkg="ball_detector" name="ball_detector_node" type="ball_detector_node" output="screen" respawn="true" />
+    <!--<remap from="/image" to="/image/ball" />
+  </node>-->
+  
+  <!--<node pkg="landmark_self_sim" name="landmarkDetector" type="landmarkDetector" respawn="true" >
+    <remap from="/image" to="/image/landmark" />
+  </node>-->
+  <node pkg="lab3" name="ballLandInfo" type="ballLandInfo" output="screen" respawn="true" />
 
 </launch>
