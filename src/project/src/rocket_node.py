@@ -3,30 +3,47 @@
 import rospy
 import armageddon
 from project.msg import rocket_msg
+from lab3.msg import ballLandInfo
 
 class rocket_node(object):
     #publisher1 = None
     #publisher2 = None
     subscriber1 = None
-    
+    subscriber2 = None
+
+    #launcher = armageddon.Armageddon()
     def __init__(self):
         rospy.init_node('rocket_node')
 
     def init_subcribers(self):
         print "init subs"
         rospy.Subscriber('/rocket_command', rocket_msg, self.rocket_callback)
+        rospy.Subscriber('/ballLandInfo', ballLandInfo, self.camCallback)
     #def init_publishers(self):
         #self.publisher1 = rospy.Publisher('rocket_topic',)
+
+    def calculateTurnage(self, angle):
+        rocket = armageddon.Armageddon()
+        if angle > 0:
+            rocket.RIGHT(500)
+        else:
+            rocket.LEFT(500)
+
     def rocket_callback(self, rocket_msg):
+        print 'msg\n'
         launcher = armageddon.Armageddon()
-        if rocket_msg.stop == 1:
-            launcher.STOP()
-        elif rocket_msg.fire == 1:
-            launcher.FIRE()
-        elif rocket_msg.angle != 0.0:
-            print("turn plz")
-            launcher.LEFT(1000.0)
-            launcher.RIGHT(2500.0)
+        launcher.working()
+
+    def camCallback(self, ballLandInfo):
+        print 'cam callback'
+        x = ballLandInfo.x
+        y = ballLandInfo.y
+        t = ballLandInfo.type
+        d = ballLandInfo.distance
+        angle = x/300.0*22.5
+        angle = angle * -1.0
+        calculateTurnage(angle)
+
 
     def main_loop(self):
         #self.init_publishers
@@ -34,7 +51,7 @@ class rocket_node(object):
         self.init_subcribers()
         #self.init_params
         rate = rospy.Rate(15);
-        
+
         while not rospy.is_shutdown():
             #put code here
             #print "while loop"
