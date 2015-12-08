@@ -25,9 +25,9 @@ class rocket_node(object):
     def calculateTurnage(self, angle):
         rocket = armageddon.Armageddon()
         if angle > 0:
-            rocket.RIGHT(500)
+            rocket.RIGHT(1000)
         else:
-            rocket.LEFT(500)
+            rocket.LEFT(1000)
 
     def rocket_callback(self, rocket_msg):
         print 'msg\n'
@@ -48,7 +48,7 @@ class rocket_node(object):
         #print "loop"
         self.init_subcribers()
         #self.init_params
-        rate = rospy.Rate(15);
+        rate = rospy.Rate(10);
 
         while not rospy.is_shutdown():
             #put code here
