@@ -31,9 +31,7 @@ class rocket_node(object):
 
     def rocket_callback(self, rocket_msg):
         print 'msg\n'
-        launcher = armageddon.Armageddon()
-        launcher.working()
-
+    
     def camCallback(self, ballLandInfo):
         print 'cam callback'
         x = ballLandInfo.x
