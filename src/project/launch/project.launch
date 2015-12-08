@@ -1,7 +1,4 @@
 <launch>
-  <node name="my_cmd_script" pkg="project" type="run_cmd.py" output="screen">
-    <param name="password" value="team123" />
-  </node>
 
   <node name="usb_cam" pkg="usb_cam" respawn="true" type="usb_cam_node" output="screen">
     <param name="video_device" value="/dev/video0" />
@@ -14,12 +11,12 @@
   </node>
   
     <rosparam param="thresh/">
-    high: {h: 171, s: 147, v: 255}
-    low: {h: 164, s: 111, v: 83}
+    high: {h: 171, s: 223, v: 255}
+    low: {h: 160, s: 45, v: 57}
   </rosparam>
   
-  <node pkg="project" name="test" type="rocket_node.py" output="screen"/>
-  <node pkg="project" name="test2" type="rocket_controller" output="screen"/>
+  <node pkg="project" name="rocketNode" type="rocket_node.py" output="screen"/>
+  <node pkg="project" name="rocketController" type="rocket_controller" output="screen"/>
   
   <include file="$(find ball_detector)/launch/displayDebugImages.launch" />
   <node pkg="ball_detector" name="ball_detector_node" type="ball_detector_node" output="screen" respawn="true" />
@@ -30,5 +27,8 @@
     <remap from="/image" to="/image/landmark" />
   </node>-->
   <node pkg="lab3" name="ballLandInfo" type="ballLandInfo" output="screen" respawn="true" />
-
+  <node name="my_cmd_script" pkg="project" type="run_cmd.py" output="screen">
+    <param name="password" value="team123" />
+  </node>
+	<node pkg="lab3" name="ballConstant" type="ballConstant" output="screen" respawn="true" />
 </launch>
