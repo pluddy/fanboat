@@ -41,7 +41,7 @@ ballLandInfo::ballLandInfo()
 
 bool lookForBall = true;
 void ballLandInfo::ball_callback(const ball_detector::ballLocation::ConstPtr& msg){
-	if(lookForBall == true){
+	if(lookForBall){
 		lab3::ballLandInfo info;
 		info.x = msg->x;
 		info.y = msg->y;
@@ -51,7 +51,7 @@ void ballLandInfo::ball_callback(const ball_detector::ballLocation::ConstPtr& ms
 	}
 }
 void ballLandInfo::land_callback(const landmark_self_sim::landmarkLocation::ConstPtr& msg){
-	if(lookForBall != true){
+	if(!lookForBall){
 		lab3::ballLandInfo info;
 		int xtop = msg->xtop+320;
 		int ytop = msg->ytop;

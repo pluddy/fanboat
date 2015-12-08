@@ -12,11 +12,12 @@ class rocket_node(object):
     #publisher2 = None
     subscriber1 = None
     subscriber2 = None
-    state = None
-    
-    
-
-    #launcher = armageddon.Armageddon()
+    yawState = None
+    pitchState = None
+    fire = None
+    timer = 0
+    lost = 1
+   
     def __init__(self):
         rospy.init_node('rocket_node')
         
@@ -28,19 +29,48 @@ class rocket_node(object):
     #def init_publishers(self):
         #self.publisher1 = rospy.Publisher('rocket_topic',)
 
-    def calculateTurnage(self, angle):
+    def calculateTurnage(self, x, y, dist):
+        if dist < 450 and dist > 0:
+            self.lost = 0
+            yaw = x/300.0*22.5
+            
+            if yaw > 3:
+                self.yawState = 1
+            elif yaw < -3:
+                self.yawState = -1
+            else:
+                self.yawState = 0
 
-        if angle > 5:
-            self.state = 1
-        elif angle < -5:
-            self.state = 2
+            thresholdPixels = 30
+
+            targetY = -dist / 4.0
+            
+            
+            if y > targetY + thresholdPixels:
+                self.pitchState = 1
+            elif y < targetY - thresholdPixels:
+                self.pitchState = -1
+            else:
+                self.pitchState = 0
+                
+            if self.yawState is 0 and self.pitchState is 0 and self.timer <= 0:
+                self.fire = 1
+            else:
+                self.fire = 0
+                
         else:
-            self.state = 0
+            self.lost = 1
+            self.fire = 0
+            self.pitchState = 0
+            self.yawState = 0
+                
+            
+            
+        
 
 
     def rocket_callback(self, rocket_msg):
         print 'msg\n'
-        self.state = 3
 
     def camCallback(self, ballLandInfo):
         
@@ -48,9 +78,8 @@ class rocket_node(object):
         y = ballLandInfo.y
         t = ballLandInfo.type
         d = ballLandInfo.distance
-        angle = x/300.0*22.5
         
-        self.calculateTurnage(angle)
+        self.calculateTurnage(x, y, d)
 
 
     def main_loop(self):
@@ -60,19 +89,35 @@ class rocket_node(object):
         #self.init_params
         rate = rospy.Rate(10);
         rocket = armageddon.Armageddon()
+        
         while not rospy.is_shutdown():
-            #put code here
-            #print "while loop"
-            print self.state
-            if self.state is 1:
-              rocket.RIGHT(25.0)
-            elif self.state is 2:
-              rocket.LEFT(25.0)
-            elif self.state is 3:
-              rocket.FIRE()
-            elif self.state is 0:
-              rocket.STOP()
-              
+            if self.timer > 0:
+                self.timer = self.timer - 1
+            print self.timer
+    
+            if self.lost is 0:
+                if self.yawState is 0 and self.pitchState is 0:
+                    #rocket.STOP()
+                    print "stop"
+                else:
+                    print "yaw: ", self.yawState, "pitch: ", self.pitchState
+                    if self.yawState is 1:
+                        rocket.RIGHT(25.0)
+                    elif self.yawState is -1:
+                        rocket.LEFT(25.0)
+                    
+                    if self.pitchState is 1:
+                        rocket.UP(20.0)
+                    elif self.pitchState is -1:
+                        rocket.DOWN(20.0)
+                        
+                if self.fire is 1:
+                    rocket.FIRE()
+                    self.timer = 200
+                    print "fire"
+            else: #lost
+                print "lost"
+                rocket.STOP()
               
             rate.sleep()
 

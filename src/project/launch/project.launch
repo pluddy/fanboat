@@ -15,7 +15,7 @@
     low: {h: 160, s: 45, v: 57}
   </rosparam>
   
-  <node pkg="project" name="rocketNode" respawn="true" type="rocket_node.py" output="screen"/>
+  <!--<node pkg="project" name="rocketNode" respawn="true" type="rocket_node.py" output="screen"/>-->
   <!--<node pkg="project" name="rocketController" type="rocket_controller" output="screen"/>-->
   
   <include file="$(find ball_detector)/launch/displayDebugImages.launch" />

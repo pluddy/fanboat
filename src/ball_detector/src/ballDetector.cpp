@@ -495,7 +495,7 @@ void BallDetector::imageCb(const sensor_msgs::ImageConstPtr& msg){
     for (int i = 0; i < 5; i++){
 	distanceTotal += movingDistanceWindow[i];
     }
-    double distance = (40/(distanceTotal/5.0))*100;
+    double distance = (60.0/(distanceTotal/5.0))*100;
     circ.imageWidth = colorImg.cols;
     circ.imageHeight = colorImg.rows;
     //Make it relative to the center of the image
