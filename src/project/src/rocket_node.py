@@ -31,7 +31,7 @@ class rocket_node(object):
 
     def rocket_callback(self, rocket_msg):
         print 'msg\n'
-    
+
     def camCallback(self, ballLandInfo):
         print 'cam callback'
         x = ballLandInfo.x
@@ -40,7 +40,7 @@ class rocket_node(object):
         d = ballLandInfo.distance
         angle = x/300.0*22.5
         angle = angle * -1.0
-        calculateTurnage(angle)
+        self.calculateTurnage(angle)
 
 
     def main_loop(self):
