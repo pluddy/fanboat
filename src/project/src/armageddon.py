@@ -73,8 +73,8 @@ class Armageddon(object):
 	  self.send_cmd(0x20)
 
 	def FIRE(self):
-	  self.send_cmd(0x20)
-	  sleep(.3)
+		self.send_cmd(0x20)
+		sleep(.3)
 		self.send_cmd(0x10)
 		sleep(5.0)
 		#self.send_cmd(0x0a)

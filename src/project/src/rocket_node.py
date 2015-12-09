@@ -119,7 +119,7 @@ class rocket_node(object):
                         #rocket.FIRE()
                         #rocket.FIRE()
                         #rocket.FIRE()
-                        self.timer = 200
+                        self.timer = 50
                         self.fire = 0
                         print "fire"
                         #i = 0
