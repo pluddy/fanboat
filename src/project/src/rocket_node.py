@@ -97,7 +97,7 @@ class rocket_node(object):
                 if self.lost is 0:
                     self.lostCount = 0
                     if self.yawState is 0 and self.pitchState is 0:
-                        #rocket.STOP()
+                        rocket.STOP()
                         print "stop"
                     else:
                         print "yaw: ", self.yawState, "pitch: ", self.pitchState
@@ -112,17 +112,20 @@ class rocket_node(object):
                             rocket.DOWN(20.0)
 
                     if self.fire is 1:
+                        #rocket.STOP()
                         rocket.FIRE()
-                        rocket.FIRE()
-                        rocket.FIRE()
-                        rocket.FIRE()
-                        rocket.FIRE()
-                        self.timer =200
+
+                        #rocket.FIRE()
+                        #rocket.FIRE()
+                        #rocket.FIRE()
+                        #rocket.FIRE()
+                        self.timer = 200
+                        self.fire = 0
                         print "fire"
-                        i = 0
-                        while i < 20000:
-                            i = i+1
-                            print i
+                        #i = 0
+                       # while i < 20000:
+                        #    i = i+1
+                        #    print i
                         self.timesFired = self.timesFired +1
                         print ' '
                         print ' '

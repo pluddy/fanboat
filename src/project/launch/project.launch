@@ -15,10 +15,10 @@
     low: {h: 160, s: 45, v: 57}
   </rosparam>
   
-    <node pkg="fanboat_ll" name="fanboat_serial" type="fanboat_serial.py" respawn="true" />
+  <node pkg="fanboat_ll" name="fanboat_serial" type="fanboat_serial.py" respawn="true" />
   
-  <!--<node pkg="project" name="rocketNode" respawn="true" type="rocket_node.py" output="screen"/>-->
-  <node pkg="project" name="rocket_ship" type="rocket_ship" output="screen"/>
+  <node pkg="project" name="rocketNode" respawn="true" type="rocket_node.py" output="screen"/>
+  <node pkg="project" name="rocketship" type="rocket_ship.py" output="screen"/>
   
   <include file="$(find ball_detector)/launch/displayDebugImages.launch" />
   <node pkg="ball_detector" name="ball_detector_node" type="ball_detector_node" output="screen" respawn="true" />
@@ -32,6 +32,16 @@
   <node name="my_cmd_script" pkg="project" type="run_cmd.py" output="screen">
     <param name="password" value="team123" />
   </node>
+  <node pkg="lab2" name="angularPositionPID" type="angularPositionPID" respawn="true" />
+  <param name="pValue" type="double" value="60"/>
+  <param name="dValue" type="double" value=".05"/>
+  <param name="iValue" type="double" value="0.0000"/> <!--0.0005 was working ok ish-->
+  <param name="iMax" type="double" value="0.0"/>
+  <param name="rightScale" type="double" value="1.4"/>
+  <param name="leftScale" type="double" value="1.4"/>
+  
+  <param name="landmarkCode" type="int" value="73"/>
+  
 	<node pkg="lab3" name="ballConstant" type="ballConstant" output="screen" respawn="true" />
   <node pkg="lab3" name="landConstant" type="landConstant" output="screen" respawn="true" />
 </launch>

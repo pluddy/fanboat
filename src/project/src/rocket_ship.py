@@ -12,7 +12,7 @@ class rocket_ship(object):
     anglePub = None
     #subscriber1 = None
     #subscriber2 = None
-    isOffence = 1
+    isOffense = 1
     TURNING_ANGLE = -6.0
     OTHER_TURNING_ANGLE = 6.0
     CC_FAST = -25.0
@@ -32,6 +32,9 @@ class rocket_ship(object):
     #launcher = armageddon.Armageddon()
     def __init__(self):
         rospy.init_node('rocket_ship')
+        self.init_publishers()
+        #print "loop"
+        self.init_subcribers()
 
     def init_subcribers(self):
         print "init subs"
@@ -43,27 +46,30 @@ class rocket_ship(object):
     def init_publishers(self):
         print "init pubs"
         self.rocketPub = rospy.Publisher('ship_topic', rocket_msg, queue_size=1)
-        self.anglePub = rospy.Publisher('angle_topic', angle_msg, queue_size=1)
+        self.anglePub = rospy.Publisher('angle_arb', angle_msg, queue_size=1)
 
     def camCallback(self, ballLandInfo):
-        print 'cam callback'
+        #print 'cam callback'
         t = ballLandInfo.type
-        if t == 0 and self.isOffence == 0:
+        if self.isOffense == 0:
             angle = angle_msg()
             angle.angle = self.CC_FAST
+            angle.thrust = .3
+            self.anglePub.publish(angle)
+        
+    def imuCallback(self, fanboatLL):
+        #print 'imu callback'
  
     def launcherCallback(self, rocket_msg):
-        self.isOffence = rocket_msg.rocket
-        if self.isOffence == 1:
+        self.isOffense = rocket_msg.rocket
+        if self.isOffense == 1:
             print 'launcher is offensive'
         else:
-            print 'deffensive mode'
+            print 'defensive mode'
         self.timesFired = rocket_msg.timesFired
 
     def main_loop(self):
-        self.init_publishers()
-        #print "loop"
-        self.init_subcribers()
+        
         #self.init_params
         rate = rospy.Rate(10);
 
@@ -75,7 +81,7 @@ class rocket_ship(object):
 if __name__ == '__main__':
     try:
         print "main"
-        rocket = rocket_node()
+        rocket = rocket_ship()
         print "rocket node"
         rocket.main_loop()
 
