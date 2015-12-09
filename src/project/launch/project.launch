@@ -15,10 +15,10 @@
     low: {h: 160, s: 45, v: 57}
   </rosparam>
   
-  <node pkg="fanboat_ll" name="fanboat_serial" type="fanboat_serial.py" respawn="true" />
+    <node pkg="fanboat_ll" name="fanboat_serial" type="fanboat_serial.py" respawn="true" />
   
   <!--<node pkg="project" name="rocketNode" respawn="true" type="rocket_node.py" output="screen"/>-->
-  <!--<node pkg="project" name="rocketController" type="rocket_controller" output="screen"/>-->
+  <node pkg="project" name="rocket_ship" type="rocket_ship" output="screen"/>
   
   <include file="$(find ball_detector)/launch/displayDebugImages.launch" />
   <node pkg="ball_detector" name="ball_detector_node" type="ball_detector_node" output="screen" respawn="true" />
@@ -33,4 +33,5 @@
     <param name="password" value="team123" />
   </node>
 	<node pkg="lab3" name="ballConstant" type="ballConstant" output="screen" respawn="true" />
+  <node pkg="lab3" name="landConstant" type="landConstant" output="screen" respawn="true" />
 </launch>

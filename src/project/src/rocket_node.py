@@ -8,7 +8,7 @@ from lab3.msg import ballLandInfo
 
 
 class rocket_node(object):
-    #publisher1 = None
+    rocketPub = None
     #publisher2 = None
     subscriber1 = None
     subscriber2 = None
@@ -77,10 +77,11 @@ class rocket_node(object):
         y = ballLandInfo.y
         t = ballLandInfo.type
         d = ballLandInfo.distance
+        print x , ' ' , y
         self.calculateTurnage(x, y, d)
 
     def main_loop(self):
-        #self.init_publishers
+        self.init_publishers()
         #print "loop"
         self.init_subcribers()
         #self.init_params
@@ -112,36 +113,50 @@ class rocket_node(object):
 
                     if self.fire is 1:
                         rocket.FIRE()
+                        rocket.FIRE()
+                        rocket.FIRE()
+                        rocket.FIRE()
+                        rocket.FIRE()
                         self.timer =200
                         print "fire"
-                        while i < 1000:
+                        i = 0
+                        while i < 20000:
                             i = i+1
+                            print i
                         self.timesFired = self.timesFired +1
-                        rocket = rocket_msg()
-                        rocket.timesFired = self.timesFired
+                        print ' '
+                        print ' '
+                        print self.timesFired
+                        print ' '
+                        print ' '
+                        rocketmsg = rocket_msg()
+                        rocketmsg.timesFired = self.timesFired
                         if self.timesFired >= 4:
                             self.isoffense = 0
-                            rocket.state = 0
+                            rocketmsg.state = 0
                         else:
-                            rocket.state = 1
-                        self.rocketPub.publish(rocket)
+                            rocketmsg.state = 1
+                        self.rocketPub.publish(rocketmsg)
+                
 
                 else: #lost
                     print "lost"
-                    rocket.DOWN(100)
-                    
+                    rocket.DOWN(100.0)                    
                     self.lostCount = self.lostCount + 1
-                    if lostCount >= 60:
+                    if self.lostCount >= 60:
                         self.spinDirection = -self.spinDirection
                         self.lostCount = 0
                     
                     if self.spinDirection is 1:
-                        rocket.RIGHT(100)
+                        rocket.RIGHT(100.0)
                     else:
-                        rocket.LEFT(100)
+                        rocket.LEFT(100.0)
                         
-
+            else:
+                print 'defense'
+            
             rate.sleep()
+            
 
 if __name__ == '__main__':
     try:
