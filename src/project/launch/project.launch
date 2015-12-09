@@ -10,10 +10,12 @@
     <remap from="/usb_cam/image_raw" to="/image"/>
   </node>
   
-    <rosparam param="thresh/">
+  <rosparam param="thresh/">
     high: {h: 171, s: 223, v: 255}
     low: {h: 160, s: 45, v: 57}
   </rosparam>
+  
+  <node pkg="fanboat_ll" name="fanboat_serial" type="fanboat_serial.py" respawn="true" />
   
   <!--<node pkg="project" name="rocketNode" respawn="true" type="rocket_node.py" output="screen"/>-->
   <!--<node pkg="project" name="rocketController" type="rocket_controller" output="screen"/>-->
