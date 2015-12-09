@@ -18,7 +18,10 @@ class rocket_node(object):
     timer = 0
     lost = 1
     timesFired = 0
-    isOffence = 1
+    isoffense = 1
+    lostCount = 0
+    spinDirection = 1
+    
 
     def __init__(self):
         rospy.init_node('rocket_node')
@@ -66,8 +69,8 @@ class rocket_node(object):
             self.yawState = 0
 
     def rocket_callback(self, rocket_msg):
-        self.isOffence = rocket_msg.state
-        print ''+ self.isOffence + ' msg\n'
+        self.isoffense = rocket_msg.state
+        print ''+ self.isoffense + ' msg\n'
 
     def camCallback(self, ballLandInfo):
         x = ballLandInfo.x
@@ -85,12 +88,13 @@ class rocket_node(object):
         rocket = armageddon.Armageddon()
 
         while not rospy.is_shutdown():
-            if self.isOffence ==1:
+            if self.isoffense ==1:
                 if self.timer > 0:
                     self.timer = self.timer - 1
                 print self.timer
 
                 if self.lost is 0:
+                    self.lostCount = 0
                     if self.yawState is 0 and self.pitchState is 0:
                         #rocket.STOP()
                         print "stop"
@@ -116,7 +120,7 @@ class rocket_node(object):
                         rocket = rocket_msg()
                         rocket.timesFired = self.timesFired
                         if self.timesFired >= 4:
-                            self.isOffence = 0
+                            self.isoffense = 0
                             rocket.state = 0
                         else:
                             rocket.state = 1
@@ -124,7 +128,18 @@ class rocket_node(object):
 
                 else: #lost
                     print "lost"
-                    rocket.STOP()
+                    rocket.DOWN(100)
+                    
+                    self.lostCount = self.lostCount + 1
+                    if lostCount >= 60:
+                        self.spinDirection = -self.spinDirection
+                        self.lostCount = 0
+                    
+                    if self.spinDirection is 1:
+                        rocket.RIGHT(100)
+                    else:
+                        rocket.LEFT(100)
+                        
 
             rate.sleep()
 
