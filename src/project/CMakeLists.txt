@@ -164,7 +164,3 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-
-add_executable(rocket_controller src/rocket_controller.cpp)
-target_link_libraries (rocket_controller ${catkin_LIBRARIES})
-add_dependencies(rocket_controller project_generate_messages_cpp)
