@@ -34,16 +34,16 @@ class rocket_node(object):
             self.lost = 0
             yaw = x/300.0*22.5
             
-            if yaw > 3:
+            if yaw > 2:
                 self.yawState = 1
-            elif yaw < -3:
+            elif yaw < -2:
                 self.yawState = -1
             else:
                 self.yawState = 0
 
             thresholdPixels = 30
 
-            targetY = -dist / 4.0
+            targetY = -dist / 4.2
             
             
             if y > targetY + thresholdPixels:
@@ -102,9 +102,9 @@ class rocket_node(object):
                 else:
                     print "yaw: ", self.yawState, "pitch: ", self.pitchState
                     if self.yawState is 1:
-                        rocket.RIGHT(25.0)
+                        rocket.RIGHT(20.0)
                     elif self.yawState is -1:
-                        rocket.LEFT(25.0)
+                        rocket.LEFT(20.0)
                     
                     if self.pitchState is 1:
                         rocket.UP(20.0)
@@ -113,7 +113,7 @@ class rocket_node(object):
                         
                 if self.fire is 1:
                     rocket.FIRE()
-                    self.timer = 200
+                    self.timer =100 
                     print "fire"
             else: #lost
                 print "lost"
