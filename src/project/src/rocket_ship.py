@@ -51,7 +51,7 @@ class rocket_ship(object):
         if t == 0 and self.isOffence == 0:
             angle = angle_msg()
             angle.angle = self.CC_FAST
-
+ 
     def launcherCallback(self, rocket_msg):
         self.isOffence = rocket_msg.rocket
         if self.isOffence == 1:
