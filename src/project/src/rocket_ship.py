@@ -7,49 +7,45 @@ from lab2.msg import angle_msg
 from fanboat_ll.msg import fanboatMotors
 from fanboat_ll.msg import fanboatLL
 
-class rocket_controller(object):
+class rocket_ship(object):
     rocketPub = None
     anglePub = None
     #subscriber1 = None
     #subscriber2 = None
+    isOffence = 1
+    TURNING_ANGLE = -6.0
+    OTHER_TURNING_ANGLE = 6.0
+    CC_FAST = -25.0
+    OTHER_FAST = 25.0
+    lastDistance = 1000.0
+    lastX = 1000.0
+    lastY = 1000.0
+    go = None
+    done = None
+    targetYaw = 1000.0
 
     #launcher = armageddon.Armageddon()
     def __init__(self):
-        rospy.init_node('rocket_controller')
+        rospy.init_node('rocket_ship')
 
     def init_subcribers(self):
         print "init subs"
-        #rospy.Subscriber('/rocket_command', rocket_msg, self.rocket_callback)
         rospy.Subscriber('/ballLandInfo', ballLandInfo, self.camCallback)
+        rospy.Subscriber('/fanboatLL', fanboatLL, self.imuCallback)
+        rospy.Subscriber
 
     def init_publishers(self):
         print "init pubs"
-        self.rocketPub = rospy.Publisher('rocket_topic', rocket_msg, queue_size=1)
+        self.rocketPub = rospy.Publisher('ship_topic', rocket_msg, queue_size=1)
         self.anglePub = rospy.Publisher('angle_topic', angle_msg, queue_size=1)
-
-    def calculateTurnage(self, angle):
-        rocket = armageddon.Armageddon()
-        if angle > 0:
-            rocket.RIGHT(1000)
-        else:
-            rocket.LEFT(1000)
 
     def camCallback(self, ballLandInfo):
         print 'cam callback'
-        x = ballLandInfo.x
-        y = ballLandInfo.y
         t = ballLandInfo.type
-        d = ballLandInfo.distance
-        angle = x/300.0*22.5
-        angle = angle * -1.0
-        rocket = rocket_msg()
-        rocket.angle = angle
-        if angle < 10 and angle > -10:
-            rocket.fire = 1
-        else:
-            rocket.fire = 0
-        rocket.stop = 0
-        self.rocketPub.publish(rocket)
+        if t == 0 and self.isOffence == 0:
+            angle = angle_msg()
+            angle.angle = self.TURNING_ANGLE
+
 
     def main_loop(self):
         self.init_publishers()
