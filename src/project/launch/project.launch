@@ -1,5 +1,8 @@
 <launch>
-
+  <node name="my_cmd_script" pkg="project" type="run_cmd.py" output="screen">
+    <param name="password" value="team123" />
+  </node>
+  
   <node name="usb_cam" pkg="usb_cam" respawn="true" type="usb_cam_node" output="screen">
     <param name="video_device" value="/dev/video0" />
     <param name="image_width" value="640" />
@@ -29,9 +32,7 @@
     <remap from="/image" to="/image/landmark" />
   </node>-->
   <node pkg="lab3" name="ballLandInfo" type="ballLandInfo" output="screen" respawn="true" />
-  <node name="my_cmd_script" pkg="project" type="run_cmd.py" output="screen">
-    <param name="password" value="team123" />
-  </node>
+
   <node pkg="lab2" name="angularPositionPID" type="angularPositionPID" respawn="true" />
   <param name="pValue" type="double" value="60"/>
   <param name="dValue" type="double" value=".05"/>

@@ -36,7 +36,7 @@ class rocket_node(object):
     def calculateTurnage(self, x, y, dist):
         if dist < 450 and dist > 0:
             self.lost = 0
-            yaw = x/300.0*22.5
+            yaw = (x/300.0*22.5)
 
             if yaw > 10:
                 self.yawState = 3
@@ -54,7 +54,7 @@ class rocket_node(object):
                 self.yawState = 0
 
             thresholdPixels = 30
-            targetY = -dist / 4.2
+            targetY = (-dist / 4.2) - 20
 
 
             if y > targetY + thresholdPixels:
@@ -161,7 +161,7 @@ class rocket_node(object):
                     print "lost"
                     rocket.DOWN(100.0)                    
                     self.lostCount = self.lostCount + 1
-                    if self.lostCount >= 60:
+                    if self.lostCount >= 45:
                         self.spin = -self.spin
                         self.lostCount = 0
                     
