@@ -3,6 +3,7 @@
 #include <landmark_self_sim/landmarkLocation.h>
 #include <ball_detector/ballLocation.h>
 #include <lab3/hasBall.h>
+#include <project/rocket_msg.h>
 #include <math.h>
 
 class ballLandInfo
@@ -15,7 +16,7 @@ private:
 
 	void ball_callback(const ball_detector::ballLocation::ConstPtr& msg);
 	void land_callback(const landmark_self_sim::landmarkLocation::ConstPtr& msg);
-	void has_ball_callback(const lab3::hasBall::ConstPtr& msg);
+	void rocket_fire_callback(const project::rocket_msg::ConstPtr& msg);
 
 
 	ros::NodeHandle nh_;
@@ -23,7 +24,7 @@ private:
 	ros::Publisher ball_land_pub_;
 
 	ros::Subscriber ball_sub_;
-  ros::Subscriber has_ball_sub_;
+  ros::Subscriber rocket_fire_sub_;
 	ros::Subscriber land_sub_;
 };
 
@@ -33,7 +34,7 @@ ballLandInfo::ballLandInfo()
 	//Subscribe to joy_constant for button controls to arbitrate
 	ball_sub_ =  nh_.subscribe<ball_detector::ballLocation>("ballConstant", 1, &ballLandInfo::ball_callback, this);
 	land_sub_ =  nh_.subscribe<landmark_self_sim::landmarkLocation>("landConstant", 1, &ballLandInfo::land_callback, this);
-	has_ball_sub_ = nh_.subscribe<lab3::hasBall>("hasBall",1, &ballLandInfo::has_ball_callback, this);
+	rocket_fire_sub_ = nh_.subscribe<project::rocket_msg>("launcher_topic",1, &ballLandInfo::rocket_fire_callback, this);
 	//Subscribe to topics to arbitrate between
 	//Publish arbitrated values to angle_joy
 	ball_land_pub_ = nh_.advertise<lab3::ballLandInfo>("ballLandInfo", 1);
@@ -72,12 +73,13 @@ void ballLandInfo::land_callback(const landmark_self_sim::landmarkLocation::Cons
 		ball_land_pub_.publish(info);
 	}
 }
-void ballLandInfo::has_ball_callback(const lab3::hasBall::ConstPtr& msg){
-	if(msg->hasBall == 1){
-		lookForBall = false;
+
+void ballLandInfo::rocket_fire_callback(const project::rocket_msg::ConstPtr& msg){
+	if(msg->state == 1){
+		lookForBall = true;
 	}
 	else{
-		lookForBall = true;
+		lookForBall = false;
 	}
 }
 

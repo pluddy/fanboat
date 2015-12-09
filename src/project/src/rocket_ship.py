@@ -20,9 +20,14 @@ class rocket_ship(object):
     lastDistance = 1000.0
     lastX = 1000.0
     lastY = 1000.0
-    go = None
-    done = None
+    go = 0
+    done = 0
     targetYaw = 1000.0
+    timesFired = 0
+    nextFired = 1
+    state = 0
+    fastCount = 0
+    CCdirection = 0
 
     #launcher = armageddon.Armageddon()
     def __init__(self):
@@ -32,6 +37,7 @@ class rocket_ship(object):
         print "init subs"
         rospy.Subscriber('/ballLandInfo', ballLandInfo, self.camCallback)
         rospy.Subscriber('/fanboatLL', fanboatLL, self.imuCallback)
+        rospy.Subscriber('/launcher_topic', rocket_msg, self.launcherCallback)
         rospy.Subscriber
 
     def init_publishers(self):
@@ -46,6 +52,13 @@ class rocket_ship(object):
             angle = angle_msg()
             angle.angle = self.TURNING_ANGLE
 
+    def launcherCallback(self, rocket_msg):
+        self.isOffence = rocket_msg.rocket
+        if self.isOffence == 1:
+            print 'launcher is offensive'
+        else:
+            print 'deffensive mode'
+        self.timesFired = rocket_msg.timesFired
 
     def main_loop(self):
         self.init_publishers()
