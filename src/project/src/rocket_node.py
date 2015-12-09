@@ -20,7 +20,7 @@ class rocket_node(object):
     timesFired = 0
     isoffense = 1
     lostCount = 0
-    spinDirection = 1
+    spin = 1
     
 
     def __init__(self):
@@ -38,15 +38,22 @@ class rocket_node(object):
             self.lost = 0
             yaw = x/300.0*22.5
 
-            if yaw > 2:
+            if yaw > 10:
+                self.yawState = 3
+            elif yaw < -10:
+                self.yawState = -3
+            elif yaw > 4:
+                self.yawState = 2
+            elif yaw < -4:
+                self.yawState = -2
+            elif yaw > 1 and self.timer > 0: #only get real accurate if we have time to spare
                 self.yawState = 1
-            elif yaw < -2:
+            elif yaw < -1 and self.timer > 0:
                 self.yawState = -1
             else:
                 self.yawState = 0
 
             thresholdPixels = 30
-
             targetY = -dist / 4.2
 
 
@@ -102,14 +109,22 @@ class rocket_node(object):
                     else:
                         print "yaw: ", self.yawState, "pitch: ", self.pitchState
                         if self.yawState is 1:
+                            rocket.RIGHT(10.0)
+                        elif self.yawState is 2:
                             rocket.RIGHT(20.0)
+                        elif self.yawState is 3:
+                            rocket.RIGHT(50.0)
                         elif self.yawState is -1:
+                            rocket.LEFT(10.0)
+                        elif self.yawState is -2:
                             rocket.LEFT(20.0)
+                        elif self.yawState is -3:
+                            rocket.LEFT(50.0)
 
                         if self.pitchState is 1:
-                            rocket.UP(20.0)
+                            rocket.UP(10.0)
                         elif self.pitchState is -1:
-                            rocket.DOWN(20.0)
+                            rocket.DOWN(10.0)
 
                     if self.fire is 1:
                         #rocket.STOP()
@@ -147,10 +162,10 @@ class rocket_node(object):
                     rocket.DOWN(100.0)                    
                     self.lostCount = self.lostCount + 1
                     if self.lostCount >= 60:
-                        self.spinDirection = -self.spinDirection
+                        self.spin = -self.spin
                         self.lostCount = 0
                     
-                    if self.spinDirection is 1:
+                    if self.spin is 1:
                         rocket.RIGHT(100.0)
                     else:
                         rocket.LEFT(100.0)

@@ -69,18 +69,18 @@ class Armageddon(object):
 
 	def RIGHT(self, duration_ms):
 		self.send_cmd(0x08)
-	    sleep(duration_ms / 1000.0)
-	    self.send_cmd(0x20)
+		sleep(duration_ms / 1000.0)
+		self.send_cmd(0x20)
 
 	def FIRE(self):
 	  	self.send_cmd(0x20)
-	  	sleep(.3)
+	  	#sleep(.3)
 		self.send_cmd(0x10)
-		sleep(5.0)
+		sleep(3.5)
 		#self.send_cmd(0x0a)
 
 	#def UPANDRIGHT(self):
-    #self.send_cmd(0x0A)
+	#self.send_cmd(0x0A)
 
 	def STOP(self):
 		self.send_cmd(0x20)
