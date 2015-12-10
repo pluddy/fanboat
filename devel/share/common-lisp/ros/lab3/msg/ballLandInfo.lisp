@@ -22,6 +22,11 @@
     :initarg :y
     :type cl:float
     :initform 0.0)
+   (id
+    :reader id
+    :initarg :id
+    :type cl:integer
+    :initform 0)
    (distance
     :reader distance
     :initarg :distance
@@ -57,6 +62,11 @@
   (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader lab3-msg:y-val is deprecated.  Use lab3-msg:y instead.")
   (y m))
 
+(cl:ensure-generic-function 'id-val :lambda-list '(m))
+(cl:defmethod id-val ((m <ballLandInfo>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader lab3-msg:id-val is deprecated.  Use lab3-msg:id instead.")
+  (id m))
+
 (cl:ensure-generic-function 'distance-val :lambda-list '(m))
 (cl:defmethod distance-val ((m <ballLandInfo>))
   (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader lab3-msg:distance-val is deprecated.  Use lab3-msg:distance instead.")
@@ -87,6 +97,12 @@
     (cl:write-byte (cl:ldb (cl:byte 8 40) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
+  (cl:let* ((signed (cl:slot-value msg 'id)) (unsigned (cl:if (cl:< signed 0) (cl:+ signed 4294967296) signed)))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) unsigned) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) unsigned) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) unsigned) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) unsigned) ostream)
+    )
   (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'distance))))
     (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
@@ -124,6 +140,12 @@
       (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
     (cl:setf (cl:slot-value msg 'y) (roslisp-utils:decode-double-float-bits bits)))
+    (cl:let ((unsigned 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) unsigned) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) unsigned) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) unsigned) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) unsigned) (cl:read-byte istream))
+      (cl:setf (cl:slot-value msg 'id) (cl:if (cl:< unsigned 2147483648) unsigned (cl:- unsigned 4294967296))))
     (cl:let ((bits 0))
       (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
@@ -148,21 +170,22 @@
   "lab3/ballLandInfo")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<ballLandInfo>)))
   "Returns md5sum for a message object of type '<ballLandInfo>"
-  "76fc4f8b957047da4a6674b91860ee82")
+  "36b468d7d3ae0986e0d15d8015a9491a")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'ballLandInfo)))
   "Returns md5sum for a message object of type 'ballLandInfo"
-  "76fc4f8b957047da4a6674b91860ee82")
+  "36b468d7d3ae0986e0d15d8015a9491a")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<ballLandInfo>)))
   "Returns full string definition for message of type '<ballLandInfo>"
-  (cl:format cl:nil "Header header~%~%#the x and y position of the object being targeted~%float64 x~%float64 y~%~%#how far the object being targeted is~%float64 distance~%~%#what type of object is being targeted 1 for ball 0 for landmark~%uint32 type~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
+  (cl:format cl:nil "Header header~%~%#the x and y position of the object being targeted~%float64 x~%float64 y~%int32 id~%#how far the object being targeted is~%float64 distance~%~%#what type of object is being targeted 1 for ball 0 for landmark~%uint32 type~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'ballLandInfo)))
   "Returns full string definition for message of type 'ballLandInfo"
-  (cl:format cl:nil "Header header~%~%#the x and y position of the object being targeted~%float64 x~%float64 y~%~%#how far the object being targeted is~%float64 distance~%~%#what type of object is being targeted 1 for ball 0 for landmark~%uint32 type~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
+  (cl:format cl:nil "Header header~%~%#the x and y position of the object being targeted~%float64 x~%float64 y~%int32 id~%#how far the object being targeted is~%float64 distance~%~%#what type of object is being targeted 1 for ball 0 for landmark~%uint32 type~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <ballLandInfo>))
   (cl:+ 0
      (roslisp-msg-protocol:serialization-length (cl:slot-value msg 'header))
      8
      8
+     4
      8
      4
 ))
@@ -172,6 +195,7 @@
     (cl:cons ':header (header msg))
     (cl:cons ':x (x msg))
     (cl:cons ':y (y msg))
+    (cl:cons ':id (id msg))
     (cl:cons ':distance (distance msg))
     (cl:cons ':type (type msg))
 ))

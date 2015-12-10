@@ -9,22 +9,26 @@
     <param name="io_method" value="mmap"/>
     <remap from="/usb_cam/image_raw" to="/image"/>
   </node>
-  
+
   <rosparam param="thresh/">
     high: {h: 171, s: 223, v: 255}
     low: {h: 160, s: 45, v: 57}
   </rosparam>
-  
+
   <node pkg="fanboat_ll" name="fanboat_serial" type="fanboat_serial.py" respawn="true" />
-  
+
   <node pkg="project" name="rocketNode" respawn="true" type="rocket_node.py" output="screen"/>
   <node pkg="project" name="rocketship" type="rocket_ship.py" output="screen"/>
-  
+
   <include file="$(find ball_detector)/launch/displayDebugImages.launch" />
   <node pkg="ball_detector" name="ball_detector_node" type="ball_detector_node" output="screen" respawn="true" />
+
+  <node pkg="landmark_self_sim" name="landmarkDetector" type="landmarkDetector" respawn="true" >
+    <remap from="/image" to="/image/landmark" />
+  </node>
     <!--<remap from="/image" to="/image/ball" />
   </node>-->
-  
+
   <!--<node pkg="landmark_self_sim" name="landmarkDetector" type="landmarkDetector" respawn="true" >
     <remap from="/image" to="/image/landmark" />
   </node>-->
@@ -39,9 +43,14 @@
   <param name="iMax" type="double" value="0.0"/>
   <param name="rightScale" type="double" value="1.4"/>
   <param name="leftScale" type="double" value="1.4"/>
-  
+
   <param name="landmarkCode" type="int" value="73"/>
-  
+
 	<node pkg="lab3" name="ballConstant" type="ballConstant" output="screen" respawn="true" />
   <node pkg="lab3" name="landConstant" type="landConstant" output="screen" respawn="true" />
+  <node pkg="lab3" name="visualArbitrator" type="visualArbitrator">
+	  <remap from="/usb_cam/image_raw_ball" to="/image/ball" />
+	  <remap from="/usb_cam/image_raw_land" to="/image/landmark" />
+	  <remap from="/usb_cam/image_raw" to="/image" />
+	</node>
 </launch>

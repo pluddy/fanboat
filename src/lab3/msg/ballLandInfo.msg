@@ -3,7 +3,7 @@ Header header
 #the x and y position of the object being targeted
 float64 x
 float64 y
-
+int32 id
 #how far the object being targeted is
 float64 distance
 

@@ -5,6 +5,8 @@
           X
           Y-VAL
           Y
+          ID-VAL
+          ID
           DISTANCE-VAL
           DISTANCE
           TYPE-VAL

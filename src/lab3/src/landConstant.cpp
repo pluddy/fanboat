@@ -36,7 +36,7 @@ void landConstant::landCallback(const landmark_self_sim::landmarkLocation::Const
 }
 
 int main(int argc, char** argv)
-{	
+{
 	ros::init(argc, argv, "landConstant");
 	landConstant landConstant;
 	ros::Rate loop_rate(10);//set frequency to 13Hz
@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 		pub.publish(land_values);
 		count ++;
 		if (count == 3){
-		  land_values.code = -1;
+		  land_values.code = -2;
 		  land_values.distance = 1000.0;
       count = 0;
     }
@@ -58,4 +58,3 @@ int main(int argc, char** argv)
 	}
 	ros::spin();
 }
-

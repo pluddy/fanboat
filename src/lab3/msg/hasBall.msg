@@ -1,4 +1,5 @@
 Header header
 
 #has the ball?
-bool hasBall
+uint32 left
+uint32 right

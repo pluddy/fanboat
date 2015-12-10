@@ -18,17 +18,17 @@ class rocket_node(object):
     timer = 0
     lost = 1
     timesFired = 0
-    isoffense = 1
+    defenseState = 0
     lostCount = 0
     spinDirection = 1
-    
+
 
     def __init__(self):
         rospy.init_node('rocket_node')
 
     def init_subcribers(self):
         print "init subs"
-        rospy.Subscriber('/rocket_command', rocket_msg, self.rocket_callback)
+        rospy.Subscriber('/ship_topic', rocket_msg, self.rocket_callback)
         rospy.Subscriber('/ballLandInfo', ballLandInfo, self.camCallback)
     def init_publishers(self):
         self.rocketPub = rospy.Publisher('launcher_topic', rocket_msg, queue_size=1)
@@ -69,8 +69,14 @@ class rocket_node(object):
             self.yawState = 0
 
     def rocket_callback(self, rocket_msg):
-        self.isoffense = rocket_msg.state
-        print ''+ self.isoffense + ' msg\n'
+        if rocket_msg.state == 1:
+            rocketMsg.state = 2
+            rocketMsg.timesFired = 4
+            rocketPub.publish(rocketMsg)
+            rocketLauncher = armageddon.Armageddon()
+            rocketLauncher.RIGHT(6000)
+            rocketLauncher.LEFT(3000)
+            rocketMsg = rocket_msg()
 
     def camCallback(self, ballLandInfo):
         x = ballLandInfo.x
@@ -89,7 +95,7 @@ class rocket_node(object):
         rocket = armageddon.Armageddon()
 
         while not rospy.is_shutdown():
-            if self.isoffense ==1:
+            if self.defenseState == 0:
                 if self.timer > 0:
                     self.timer = self.timer - 1
                 print self.timer
@@ -112,54 +118,39 @@ class rocket_node(object):
                             rocket.DOWN(20.0)
 
                     if self.fire is 1:
-                        #rocket.STOP()
                         rocket.FIRE()
-
-                        #rocket.FIRE()
-                        #rocket.FIRE()
-                        #rocket.FIRE()
-                        #rocket.FIRE()
                         self.timer = 200
                         self.fire = 0
                         print "fire"
-                        #i = 0
-                       # while i < 20000:
-                        #    i = i+1
-                        #    print i
                         self.timesFired = self.timesFired +1
-                        print ' '
-                        print ' '
-                        print self.timesFired
-                        print ' '
-                        print ' '
+                        print '\n\n', self.timesFired, '\n\n'
                         rocketmsg = rocket_msg()
                         rocketmsg.timesFired = self.timesFired
                         if self.timesFired >= 4:
-                            self.isoffense = 0
-                            rocketmsg.state = 0
-                        else:
+                            self.defenseState = 1
                             rocketmsg.state = 1
+                        else:
+                            rocketmsg.state = 0
                         self.rocketPub.publish(rocketmsg)
-                
 
                 else: #lost
                     print "lost"
-                    rocket.DOWN(100.0)                    
+                    rocket.DOWN(100.0)
                     self.lostCount = self.lostCount + 1
                     if self.lostCount >= 60:
                         self.spinDirection = -self.spinDirection
                         self.lostCount = 0
-                    
+
                     if self.spinDirection is 1:
                         rocket.RIGHT(100.0)
                     else:
                         rocket.LEFT(100.0)
-                        
+
             else:
                 print 'defense'
-            
+
             rate.sleep()
-            
+
 
 if __name__ == '__main__':
     try:

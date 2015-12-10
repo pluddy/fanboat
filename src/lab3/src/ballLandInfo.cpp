@@ -48,6 +48,7 @@ void ballLandInfo::ball_callback(const ball_detector::ballLocation::ConstPtr& ms
 		info.y = msg->y;
 		info.distance = msg->distance;
 		info.type = 1;
+		info.id = -5;
 		ball_land_pub_.publish(info);
 	}
 }
@@ -59,7 +60,7 @@ void ballLandInfo::land_callback(const landmark_self_sim::landmarkLocation::Cons
 		int xbottom = msg->xbottom+320;
 		int ybottom = msg->ybottom;
 		int height = msg->height;
-
+		int id = msg->code;
 		int width = (11/8.5)*height;
 
 		int x = ((xtop + xbottom)/2) - width/2;
@@ -68,6 +69,7 @@ void ballLandInfo::land_callback(const landmark_self_sim::landmarkLocation::Cons
 		info.y = (ytop + ybottom) /2;
 		info.distance = msg->distance;
 		info.type = 0;
+		info.id = id;
 		info.header.stamp = ros::Time::now();
 //		ROS_INFO("hurdurhur");
 		ball_land_pub_.publish(info);
