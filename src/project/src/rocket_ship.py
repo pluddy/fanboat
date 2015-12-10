@@ -44,10 +44,10 @@ class rocket_ship(object):
         rospy.Subscriber('/launcher_topic', rocket_msg, self.launcherCallback)
         rospy.Subscriber('/lrsensors', hasBall, self.rangeCallback)
 
-    def init_publishers(self):
-        print "init pubs"
-        self.rocketPub = rospy.Publisher('ship_topic', rocket_msg, queue_size=1)
-        self.anglePub = rospy.Publisher('angle_arb', angle_msg, queue_size=1)
+	def init_publishers(self):
+		print "init pubs"
+		self.rocketPub = rospy.Publisher('ship_topic', rocket_msg, queue_size=1)
+		self.anglePub = rospy.Publisher('angle_arb', angle_msg, queue_size=1)
 
     def rangeCallback(self, hasBall):
         self.left = hasBall.left
