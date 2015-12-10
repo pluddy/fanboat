@@ -69,8 +69,8 @@ class Armageddon(object):
 
 	def RIGHT(self, duration_ms):
 		self.send_cmd(0x08)
-	    sleep(duration_ms / 1000.0)
-	    self.send_cmd(0x20)
+		sleep(duration_ms / 1000.0)
+		self.send_cmd(0x20)
 
 	def FIRE(self):
 	  	self.send_cmd(0x20)

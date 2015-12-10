@@ -119,16 +119,7 @@ class rocket_node(object):
 
                     if self.fire is 1:
                         rocket.FIRE()
-<<<<<<< HEAD
                         self.timer = 200
-=======
-
-                        #rocket.FIRE()
-                        #rocket.FIRE()
-                        #rocket.FIRE()
-                        #rocket.FIRE()
-                        self.timer = 50
->>>>>>> 5491fb6502a70c86b9c70d68bcb5f57411e18119
                         self.fire = 0
                         print "fire"
                         self.timesFired = self.timesFired +1
@@ -143,7 +134,6 @@ class rocket_node(object):
                         self.rocketPub.publish(rocketmsg)
 
                 else: #lost
-                    print "lost"
                     rocket.DOWN(100.0)
                     self.lostCount = self.lostCount + 1
                     if self.lostCount >= 60:
