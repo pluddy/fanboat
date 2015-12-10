@@ -7,4 +7,6 @@
   :components ((:file "_package")
     (:file "rocket_msg" :depends-on ("_package_rocket_msg"))
     (:file "_package_rocket_msg" :depends-on ("_package"))
+    (:file "angle" :depends-on ("_package_angle"))
+    (:file "_package_angle" :depends-on ("_package"))
   ))

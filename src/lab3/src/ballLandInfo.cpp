@@ -77,11 +77,11 @@ void ballLandInfo::land_callback(const landmark_self_sim::landmarkLocation::Cons
 }
 
 void ballLandInfo::rocket_fire_callback(const project::rocket_msg::ConstPtr& msg){
-	if(msg->state == 1){
-		lookForBall = true;
+	if(msg->state >= 1){
+		lookForBall = false;
 	}
 	else{
-		lookForBall = false;
+		lookForBall = true;
 	}
 }
 

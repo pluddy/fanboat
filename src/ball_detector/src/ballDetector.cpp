@@ -127,7 +127,7 @@ BallDetector::BallDetector()
     updateLowHSV_sub_ = nh.subscribe<geometry_msgs::Vector3>("thresh/low",1,&BallDetector::updateLowThreshold,this);
     updateHighHSV_sub_ = nh.subscribe<geometry_msgs::Vector3>("thresh/high",1,&BallDetector::updateHighThreshold,this);
 
-    image_sub_ = it.subscribe("image", 1, &BallDetector::imageCb, this);
+    image_sub_ = it.subscribe("image/ball", 1, &BallDetector::imageCb, this);
 
 
     lowh_pub_ = nh.advertise<std_msgs::Float64>("hsv/center/low/h", 1);

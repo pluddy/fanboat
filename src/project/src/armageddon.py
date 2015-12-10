@@ -76,7 +76,7 @@ class Armageddon(object):
 	  	self.send_cmd(0x20)
 	  	sleep(.3)
 		self.send_cmd(0x10)
-		sleep(5.0)
+		sleep(3.5)
 		#self.send_cmd(0x0a)
 
 	#def UPANDRIGHT(self):

@@ -51,6 +51,7 @@ include_directories(SYSTEM ${LIBUSB1_INCLUDE_DIRS})
  add_message_files(
    FILES
    rocket_msg.msg
+   angle.msg
  )
 
 ## Generate services in the 'srv' folder
