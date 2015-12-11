@@ -40,7 +40,7 @@ class rocket_ship(object):
 		rospy.Subscriber('/ballLandInfo', ballLandInfo, self.camCallback)
 		rospy.Subscriber('/sensors', fanboatLL, self.imuCallback)
 		rospy.Subscriber('/launcher_topic', rocket_msg, self.launcherCallback)
-			
+
 	def init_publishers(self):
 		print "init pubs"
 		self.rocketPub = rospy.Publisher('ship_topic', rocket_msg, queue_size=1)
@@ -54,12 +54,12 @@ class rocket_ship(object):
 		dist = ballLandInfo.distance
 		x = ballLandInfo.x
 		y = ballLandInfo.y
-			
+
 	def imuCallback(self, fanboatLL):
 		self.fll = fanboatLL
 		self.left = fanboatLL.a1
 		self.right = fanboatLL.a0
-			
+
 		ang = angle()
 		print 'defense state ', self.defenseState
 		if self.defenseState == 2:
@@ -69,7 +69,7 @@ class rocket_ship(object):
 			self.savedYaw = -90.0
 			if self.fll.yaw < -85.0 and self.fll.yaw > -95.0:
 				self.defenseState = 3
-		
+
 		elif self.defenseState == 3:
 			#this is for going to the left landmark
 			if self.savedYaw is 90.0 and self.fll.yaw < 95.0 and self.fll.yaw > 85.0:
@@ -84,7 +84,7 @@ class rocket_ship(object):
 						self.savedYaw = 90.0
 					else:
 						self.savedYaw = -90.0
-			
+
 				ang.angle = self.savedYaw
 			elif self.savedYaw is None:
 				ang.forward = 1
@@ -93,9 +93,9 @@ class rocket_ship(object):
 		elif self.defenseState == 4:
 			ang.angle = 0.0
 			ang.forward = 0
-				
+		ang.state = self.defenseState
 		self.anglePub.publish(ang)
-			
+
 	def launcherCallback(self, rocket_msg1):
 		self.defenseState = rocket_msg1.state
 		self.timesFired = rocket_msg1.timesFired
