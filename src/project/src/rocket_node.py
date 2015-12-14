@@ -18,7 +18,7 @@ class rocket_node(object):
     fire = None
     timer = 0
     lost = 1
-    timesFired = 0
+    timesFired = -30
     defenseState = 0
     lostCount = 0
     spinDirection = 1

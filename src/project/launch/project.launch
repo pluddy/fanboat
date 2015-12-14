@@ -20,14 +20,19 @@
   <node pkg="project" name="rocketNode" respawn="true" type="rocket_node.py" output="screen"/>
   <node pkg="project" name="rocketship" type="rocket_ship.py" output="screen"/>
 
- <!-- <include file="$(find ball_detector)/launch/displayDebugImages.launch" />-->
+	<include file="$(find ball_detector)/launch/displayDebugImages.launch" />
   <node pkg="ball_detector" name="ball_detector_node" type="ball_detector_node" output="screen" respawn="true" />
+
+
+  <!--<node name="saveDebug1" pkg="image_view" type="extract_images" respawn="false" output="screen">
+    <param name="filename_format" value="$(env PWD)/%04i_debug1.jpg" />
+    <remap from="image" to="/balldebug/img1"/>
+  </node>-->
+
 
   <node pkg="landmark_self_sim" name="landmarkDetector" type="landmarkDetector" respawn="true" >
     <remap from="/image" to="/image/landmark" />
   </node>
-    <!--<remap from="/image" to="/image/ball" />
-  </node>-->
 
   <!--<node pkg="landmark_self_sim" name="landmarkDetector" type="landmarkDetector" respawn="true" >
     <remap from="/image" to="/image/landmark" />
